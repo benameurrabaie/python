@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Registration – Python</title>
+<style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+        font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+        background:linear-gradient(135deg,#1e3a8a 0%,#3b82f6 50%,#f59e0b 100%);
+        min-height:100vh;
+        display:flex; justify-content:center; align-items:center;
+        padding:20px; position:relative; overflow:hidden;
+    }
+    body::before { content:''; position:absolute; width:500px; height:500px; background:rgba(255,255,255,0.1); border-radius:50%; top:-250px; right:-250px; animation:float 6s ease-in-out infinite; }
+    body::after  { content:''; position:absolute; width:400px; height:400px; background:rgba(255,255,255,0.1); border-radius:50%; bottom:-200px; left:-200px; animation:float 8s ease-in-out infinite; }
+    @keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-20px);}}
+    .container { background:rgba(255,255,255,0.97); backdrop-filter:blur(10px); padding:40px; border-radius:20px; box-shadow:0 20px 60px rgba(0,0,0,0.3); width:100%; max-width:450px; position:relative; z-index:1; animation:slideIn .5s ease-out; }
+    @keyframes slideIn{from{opacity:0;transform:translateY(-30px);}to{opacity:1;transform:translateY(0);}}
+    .logo { text-align:center; margin-bottom:20px; }
+    .logo-icon { width:70px; height:70px; background:linear-gradient(135deg,#1e3a8a 0%,#3b82f6 100%); border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-size:36px; margin-bottom:10px; box-shadow:0 4px 15px rgba(59,130,246,0.4); }
+    h2 { text-align:center; color:#333; margin-bottom:10px; font-size:28px; font-weight:600; }
+    .subtitle { text-align:center; color:#666; margin-bottom:30px; font-size:14px; }
+    .input-group { position:relative; margin-bottom:25px; }
+    .input-group label { position:absolute; left:15px; top:12px; color:#999; font-size:14px; pointer-events:none; transition:all .3s; background:white; padding:0 5px; }
+    .input-group input { width:100%; padding:12px 15px; border:2px solid #e0e0e0; border-radius:10px; font-size:14px; transition:all .3s; background:white; }
+    .input-group input:focus { outline:none; border-color:#3b82f6; box-shadow:0 0 0 3px rgba(59,130,246,.1); }
+    .input-group input:focus+label,
+    .input-group input:not(:placeholder-shown)+label { top:-10px; left:10px; font-size:12px; color:#3b82f6; font-weight:600; }
+    .password-toggle { position:absolute; right:15px; top:12px; cursor:pointer; color:#999; user-select:none; font-size:20px; transition:color .3s; }
+    .password-toggle:hover { color:#3b82f6; }
+    button { width:100%; padding:14px; background:linear-gradient(135deg,#1e3a8a 0%,#3b82f6 100%); color:white; border:none; border-radius:10px; font-size:16px; font-weight:600; cursor:pointer; transition:all .3s; margin-top:10px; box-shadow:0 4px 15px rgba(59,130,246,.4); }
+    button:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(59,130,246,.6); }
+    button:active { transform:translateY(0); }
+    .error { background:#fee; color:#c33; padding:12px; border-radius:8px; font-size:13px; margin-bottom:20px; border-left:4px solid #c33; display:none; animation:shake .3s; }
+    .error.show { display:block; }
+    @keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-10px);}75%{transform:translateX(10px);}}
+    .link-text { text-align:center; margin-top:20px; color:#666; font-size:14px; }
+    .link-text a { color:#3b82f6; text-decoration:none; font-weight:600; transition:color .3s; }
+    .link-text a:hover { color:#1d4ed8; text-decoration:underline; }
+    .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:25px; }
+    .grid-2 .input-group { margin-bottom:0; }
+    button.loading { pointer-events:none; opacity:.7; }
+    button.loading::after { content:''; position:absolute; width:16px; height:16px; top:50%; left:50%; margin:-8px; border:2px solid transparent; border-top-color:white; border-radius:50%; animation:spin .6s linear infinite; }
+    @keyframes spin{to{transform:rotate(360deg);}}
+    @media(max-width:480px){ .container{padding:30px 20px;} .grid-2{grid-template-columns:1fr;gap:0;} .grid-2 .input-group{margin-bottom:25px;} }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="logo">
+    <div class="logo-icon">🐍</div>
+  </div>
+  <h2>Create Account</h2>
+  <p class="subtitle">Join the Python learning platform today!</p>
+
+  <div class="error" id="error"></div>
+
+  <div class="input-group">
+    <input type="text" id="id_student" placeholder=" " autocomplete="off">
+    <label>Student ID</label>
+  </div>
+
+  <div class="grid-2">
+    <div class="input-group">
+      <input type="text" id="name" placeholder=" " autocomplete="given-name">
+      <label>First Name</label>
+    </div>
+    <div class="input-group">
+      <input type="text" id="lastname" placeholder=" " autocomplete="family-name">
+      <label>Last Name</label>
+    </div>
+  </div>
+
+  <div class="input-group">
+    <input type="date" id="birthdate" placeholder=" ">
+    <label>Date of Birth</label>
+  </div>
+
+  <div class="input-group">
+    <input type="text" id="level" placeholder=" " autocomplete="off">
+    <label>Level</label>
+  </div>
+
+  <div class="input-group">
+    <input type="password" id="password" placeholder=" " autocomplete="new-password">
+    <label>Password</label>
+    <span class="password-toggle" onclick="togglePassword('password')">👁️</span>
+  </div>
+
+  <div class="input-group">
+    <input type="password" id="confirmPassword" placeholder=" " autocomplete="new-password">
+    <label>Confirm Password</label>
+    <span class="password-toggle" onclick="togglePassword('confirmPassword')">👁️</span>
+  </div>
+
+  <button onclick="register()">Create Account</button>
+
+  <p class="link-text">Already have an account? <a href="login.html">Login here</a></p>
+</div>
+
+<script>
+const databaseURL = "https://python-725d7-default-rtdb.firebaseio.com/";
+
+function togglePassword(id){const f=document.getElementById(id);f.type=f.type==='password'?'text':'password';}
+function showError(msg){const e=document.getElementById('error');e.innerText=msg;e.classList.add('show');}
+function hideError(){document.getElementById('error').classList.remove('show');}
+
+function register(){
+  const id=document.getElementById('id_student').value.trim();
+  const name=document.getElementById('name').value.trim();
+  const lastname=document.getElementById('lastname').value.trim();
+  const birthdate=document.getElementById('birthdate').value;
+  const level=document.getElementById('level').value.trim();
+  const password=document.getElementById('password').value;
+  const confirm=document.getElementById('confirmPassword').value;
+  const btn=document.querySelector('button');
+  hideError();
+  if(!id||!name||!lastname||!birthdate||!level||!password||!confirm){showError("Please fill in all fields.");return;}
+  if(password.length<6){showError("Password must be at least 6 characters long.");return;}
+  if(password!==confirm){showError("Passwords do not match.");return;}
+  btn.classList.add('loading');btn.style.position='relative';
+  const orig=btn.innerText;btn.innerText='';
+  fetch(`${databaseURL}/students/${id}.json`)
+  .then(r=>r.json())
+  .then(existing=>{
+    if(existing){showError("Student ID already exists.");btn.classList.remove('loading');btn.innerText=orig;return;}
+    const data={id_student:id,name,lastname,birthdate,level,password};
+    return fetch(`${databaseURL}/students/${id}.json`,{method:'PUT',body:JSON.stringify(data)});
+  })
+  .then(res=>{
+    if(res&&res.ok){alert("Registration successful! You can now login.");window.location.href="login.html";}
+  })
+  .catch(err=>{showError("Error: "+err);btn.classList.remove('loading');btn.innerText=orig;});
+}
+document.addEventListener('keypress',e=>{if(e.key==='Enter')register();});
+</script>
+</body>
+</html>
