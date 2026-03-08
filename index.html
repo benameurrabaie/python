@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Learn Python</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+<style>
+:root {
+  --primary: #3b82f6;
+  --primary-dark: #1d4ed8;
+  --primary-light: #60a5fa;
+  --secondary: #f59e0b;
+  --accent: #f59e0b;
+  --success: #10b981;
+  --error: #ef4444;
+  --bg-main: #0f172a;
+  --bg-card: #1e293b;
+  --bg-panel: #334155;
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --border: #475569;
+  --shadow: rgba(0,0,0,0.3);
+  --tab-h: 56px;
+  --bar-h: 72px;
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Poppins',sans-serif;-webkit-tap-highlight-color:transparent;}
+body{background:linear-gradient(135deg,#0f172a 0%,#1e293b 100%);color:var(--text-primary);padding:2rem 1rem;min-height:100vh;position:relative;overflow-x:hidden;}
+body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:radial-gradient(circle at 20% 50%,rgba(59,130,246,.1) 0%,transparent 50%),radial-gradient(circle at 80% 80%,rgba(245,158,11,.1) 0%,transparent 50%);pointer-events:none;z-index:0;}
+main{max-width:1400px;margin:auto;position:relative;z-index:1;}
+
+.user-header{display:flex;justify-content:space-between;align-items:center;background:var(--bg-card);padding:1rem 1.5rem;border-radius:16px;margin-bottom:2rem;border:1px solid var(--border);}
+.user-info{display:flex;align-items:center;gap:1rem;}
+.user-avatar{width:50px;height:50px;background:linear-gradient(135deg,var(--primary) 0%,var(--secondary) 100%);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.5rem;}
+.user-details h3{font-size:1.1rem;margin-bottom:.25rem;}
+.user-details p{font-size:.9rem;color:var(--text-secondary);}
+.logout-btn{padding:.75rem 1.5rem;background:var(--error);color:white;border:none;border-radius:8px;font-weight:600;cursor:pointer;transition:all .3s ease;min-height:44px;}
+.logout-btn:hover{background:#dc2626;transform:translateY(-2px);}
+
+h1{text-align:center;font-size:2.5rem;font-weight:700;background:linear-gradient(135deg,#60a5fa 0%,#f59e0b 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:2rem;}
+h2{color:var(--text-primary);font-size:1.3rem;font-weight:600;margin-bottom:1rem;}
+
+.header-section{background:var(--bg-card);border-radius:20px;padding:2rem;margin-bottom:2rem;box-shadow:0 10px 40px var(--shadow);border:1px solid var(--border);}
+.selection-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem;}
+.header-section label{display:block;font-weight:600;color:var(--text-primary);margin-bottom:.75rem;font-size:1.1rem;}
+select{width:100%;padding:1rem 3rem 1rem 1.25rem;border-radius:12px;border:2px solid var(--border);background:var(--bg-panel);color:var(--text-primary);font-size:1rem;font-weight:500;cursor:pointer;transition:all .3s ease;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23cbd5e1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 1rem center;background-size:20px;min-height:52px;}
+select:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 4px rgba(59,130,246,.2);}
+
+.tutorial{background:linear-gradient(135deg,rgba(59,130,246,.15) 0%,rgba(59,130,246,.05) 100%);padding:1.5rem;border-radius:16px;margin:1.5rem 0;border:1px solid rgba(59,130,246,.3);}
+.tutorial h3{color:var(--primary-light);font-size:1.2rem;margin-bottom:1rem;}
+.tutorial p{color:var(--text-secondary);font-size:1rem;line-height:1.6;margin-bottom:.75rem;}
+.tutorial code{background:rgba(0,0,0,.3);padding:2px 6px;border-radius:4px;font-family:'JetBrains Mono',monospace;color:var(--primary-light);}
+.tutorial ul{margin-left:1.5rem;margin-top:.5rem;}
+.tutorial li{margin-bottom:.5rem;}
+.tutorial pre{background:var(--bg-main);padding:1rem;border-radius:8px;overflow-x:auto;margin:.75rem 0;border:1px solid var(--border);}
+.tutorial pre code{background:none;padding:0;color:var(--text-primary);}
+.course{background:linear-gradient(135deg,rgba(245,158,11,.15) 0%,rgba(245,158,11,.05) 100%);padding:1.5rem;border-radius:16px;margin:1.5rem 0;border:1px solid rgba(245,158,11,.3);}
+.course p{color:var(--text-secondary);font-size:1rem;line-height:1.6;}
+.course code{background:rgba(0,0,0,.3);padding:2px 6px;border-radius:4px;font-family:'JetBrains Mono',monospace;color:var(--accent);}
+#activityDesc{text-align:center;font-size:1.1rem;color:var(--text-secondary);margin-bottom:1rem;font-weight:500;}
+
+.tutorial-toggle{display:none;width:100%;background:none;border:none;color:var(--primary-light);font-size:1rem;font-weight:600;text-align:left;cursor:pointer;padding:0;margin-bottom:.5rem;box-shadow:none;min-height:0;}
+.tutorial-toggle:hover,.tutorial-toggle:active{transform:none!important;box-shadow:none!important;}
+.tutorial-body{transition:max-height .35s ease,opacity .35s ease;overflow:hidden;}
+.tutorial-body.collapsed{max-height:0;opacity:0;}
+.tutorial-body.expanded{max-height:2000px;opacity:1;}
+
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin:1.5rem 0;}
+.stat-card{background:var(--bg-panel);padding:1rem;border-radius:12px;text-align:center;border:1px solid var(--border);}
+.stat-value{font-size:1.8rem;font-weight:700;color:var(--primary-light);margin-bottom:.25rem;}
+.stat-label{font-size:.85rem;color:var(--text-secondary);}
+
+.progress-section{background:linear-gradient(135deg,rgba(16,185,129,.15) 0%,rgba(16,185,129,.05) 100%);padding:1.5rem;border-radius:16px;margin:1.5rem 0;border:1px solid rgba(16,185,129,.3);text-align:center;}
+.progress-bar-container{background:var(--bg-main);border-radius:12px;height:30px;overflow:hidden;margin:1rem 0;border:1px solid var(--border);}
+.progress-bar{height:100%;background:linear-gradient(90deg,var(--success) 0%,#059669 100%);transition:width .5s ease;display:flex;align-items:center;justify-content:center;color:white;font-weight:600;font-size:.9rem;}
+
+.board{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:2rem;}
+.panel{background:var(--bg-card);padding:2rem;border-radius:20px;box-shadow:0 10px 40px var(--shadow);border:1px solid var(--border);transition:all .3s ease;}
+.panel:hover{box-shadow:0 15px 50px rgba(59,130,246,.2);border-color:var(--primary);}
+.panel h2{text-align:center;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:2px solid var(--border);background:linear-gradient(135deg,var(--primary) 0%,var(--secondary) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.drop-zone{min-height:320px;border:2px dashed var(--border);border-radius:16px;padding:1rem;background:rgba(15,23,42,.5);transition:all .3s ease;}
+.drop-zone:hover{border-color:var(--primary-light);background:rgba(59,130,246,.05);}
+
+.code-line{background:linear-gradient(135deg,var(--bg-panel) 0%,var(--bg-card) 100%);padding:.9rem 1.2rem;border-radius:12px;margin-bottom:.75rem;cursor:grab;user-select:none;transition:all .25s ease;display:flex;align-items:center;font-family:'JetBrains Mono',monospace;font-size:.95rem;border:1px solid var(--border);box-shadow:0 4px 10px rgba(0,0,0,.2);position:relative;overflow:hidden;min-height:48px;}
+.code-line::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--primary);opacity:0;transition:opacity .25s ease;flex-shrink:0;}
+.code-line:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(59,130,246,.3);border-color:var(--primary);}
+.code-line:hover::before{opacity:1;}
+.code-line:active{cursor:grabbing;}
+.code-line .ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.3);transform:scale(0);animation:rippleAnim .5s linear;pointer-events:none;}
+@keyframes rippleAnim{to{transform:scale(4);opacity:0;}}
+.code-line.tap-selected{border-color:var(--accent)!important;background:linear-gradient(135deg,rgba(245,158,11,.3) 0%,rgba(245,158,11,.12) 100%)!important;box-shadow:0 0 0 3px rgba(245,158,11,.6),0 8px 24px rgba(245,158,11,.3)!important;transform:translateY(-3px) scale(1.02)!important;}
+.code-line.tap-selected::before{opacity:1;background:var(--accent);}
+
+.solution-slot{background:linear-gradient(135deg,rgba(59,130,246,.08) 0%,rgba(245,158,11,.05) 100%);padding:.7rem 1.2rem;border-radius:10px;margin-bottom:.6rem;display:flex;align-items:center;font-family:'JetBrains Mono',monospace;font-size:.95rem;border:2px dashed var(--accent);min-height:48px;transition:all .25s ease;position:relative;cursor:pointer;color:var(--accent);animation:pulse 2s ease-in-out infinite;}
+.solution-slot:hover{border-color:var(--primary-light);background:rgba(59,130,246,.15);animation:none;}
+.solution-slot.tap-ready{border-color:var(--accent);background:rgba(245,158,11,.18);animation:pulseAccent .9s ease-in-out infinite;cursor:pointer;}
+.solution-slot.filled{background:linear-gradient(135deg,rgba(16,185,129,.2) 0%,rgba(16,185,129,.1) 100%);border:2px solid var(--success);color:var(--text-primary);animation:none;cursor:default;}
+.solution-slot.filled.mobile-unplaceable{cursor:pointer;}
+.solution-slot.filled.mobile-unplaceable:active{transform:scale(.97);}
+.solution-slot.error{background:linear-gradient(135deg,rgba(239,68,68,.2) 0%,rgba(239,68,68,.1) 100%);border:2px solid var(--error);animation:shake .5s ease;}
+.unplace-hint{display:none;position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:.7rem;opacity:.5;}
+
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(245,158,11,.4);}50%{box-shadow:0 0 0 8px rgba(245,158,11,0);}}
+@keyframes pulseAccent{0%,100%{box-shadow:0 0 0 0 rgba(245,158,11,.7);}50%{box-shadow:0 0 0 12px rgba(245,158,11,0);}}
+@keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-6px);}75%{transform:translateX(6px);}}
+@keyframes correctPop{0%{transform:scale(1);}50%{transform:scale(1.06);}100%{transform:scale(1);}}
+.dragging{opacity:.4;transform:scale(1.05) rotate(2deg);}
+
+.slot-number{display:inline-block;background:rgba(245,158,11,.3);color:var(--accent);border-radius:4px;padding:0 5px;font-size:.75rem;margin-right:6px;font-family:'JetBrains Mono',monospace;flex-shrink:0;}
+.solution-slot.filled .slot-number{display:none;}
+
+.mobile-tabs{display:none;position:sticky;top:0;z-index:200;background:var(--bg-card);border-radius:14px;padding:6px;margin-bottom:1rem;box-shadow:0 4px 20px rgba(0,0,0,.4);border:1px solid var(--border);grid-template-columns:1fr 1fr;gap:6px;}
+.mobile-tab{padding:.75rem .5rem;border:none;border-radius:10px;background:transparent;color:var(--text-secondary);font-size:.9rem;font-weight:600;cursor:pointer;transition:all .25s ease;display:flex;align-items:center;justify-content:center;gap:.5rem;position:relative;min-height:44px;}
+.mobile-tab.active{background:linear-gradient(135deg,var(--primary) 0%,var(--primary-dark) 100%);color:white;box-shadow:0 4px 14px rgba(59,130,246,.5);}
+.tab-badge{background:var(--accent);color:#1a0a00;border-radius:20px;padding:1px 7px;font-size:.72rem;font-weight:700;min-width:22px;text-align:center;}
+.mobile-tab.active .tab-badge{background:rgba(255,255,255,.3);color:white;}
+.tab-panel{display:block;}
+
+#mobileSelectedBar{display:none;position:fixed;bottom:0;left:0;right:0;z-index:900;background:linear-gradient(135deg,rgba(245,158,11,.98) 0%,rgba(217,119,6,.98) 100%);padding:.85rem 1.25rem;flex-direction:row;align-items:center;justify-content:space-between;gap:.75rem;border-top:2px solid rgba(255,255,255,.35);backdrop-filter:blur(12px);box-shadow:0 -6px 30px rgba(245,158,11,.4);animation:slideUp .25s ease;}
+@keyframes slideUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
+#mobileSelectedBar.visible{display:flex;}
+#mobileSelectedMeta{display:flex;flex-direction:column;flex:1;min-width:0;}
+#mobileSelectedTag{font-size:.7rem;color:rgba(26,10,0,.65);margin-bottom:2px;font-weight:500;letter-spacing:.5px;text-transform:uppercase;}
+#mobileSelectedLabel{font-family:'JetBrains Mono',monospace;font-size:.88rem;font-weight:700;color:#1a0a00;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+#mobileCancelBtn{background:rgba(0,0,0,.25);color:#1a0a00;border:none;border-radius:10px;padding:.5rem .9rem;font-size:.85rem;font-weight:700;cursor:pointer;box-shadow:none;min-height:40px;min-width:40px;flex-shrink:0;transform:none!important;transition:background .2s;}
+#mobileCancelBtn:active{background:rgba(0,0,0,.4);}
+body.has-mobile-bar{padding-bottom:calc(var(--bar-h) + 1rem);}
+
+.mobile-ring-wrap{display:none;align-items:center;justify-content:center;margin-bottom:.75rem;}
+.progress-ring-svg{transform:rotate(-90deg);}
+.progress-ring-bg{fill:none;stroke:var(--border);stroke-width:8;}
+.progress-ring-fill{fill:none;stroke:var(--success);stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset .5s ease;}
+.ring-label{position:absolute;font-size:1rem;font-weight:700;color:var(--success);}
+.ring-container{position:relative;display:flex;align-items:center;justify-content:center;}
+
+.editor-section{background:var(--bg-card);padding:2rem;border-radius:20px;margin-top:2rem;box-shadow:0 10px 40px var(--shadow);border:1px solid var(--border);}
+.editor-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:1rem;}
+.auto-update-indicator{display:flex;align-items:center;gap:.5rem;padding:.5rem 1rem;background:var(--bg-panel);border-radius:8px;font-size:.9rem;color:var(--text-secondary);}
+.auto-update-indicator .dot{width:8px;height:8px;border-radius:50%;background:var(--success);animation:blink 2s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.3;}}
+.code-editor-wrapper{position:relative;border-radius:16px;overflow:hidden;border:2px solid var(--border);background:#1e1e1e;transition:all .3s ease;}
+.code-editor-wrapper:focus-within{border-color:var(--primary);box-shadow:0 0 0 4px rgba(59,130,246,.2);}
+#monacoEditor{height:400px;width:100%;}
+
+.mobile-editor-toggle{display:none;width:100%;background:var(--bg-panel);border:1px solid var(--border);color:var(--text-secondary);border-radius:10px;padding:.8rem 1rem;font-size:.9rem;font-weight:600;cursor:pointer;text-align:left;box-shadow:none;min-height:44px;margin-bottom:.75rem;transition:all .2s;}
+.mobile-editor-toggle:hover{border-color:var(--primary);color:var(--primary-light);}
+.mobile-editor-body{transition:max-height .4s ease,opacity .4s ease;overflow:hidden;}
+.mobile-editor-body.collapsed{max-height:0;opacity:0;}
+.mobile-editor-body.expanded{max-height:500px;opacity:1;}
+
+.compiler-section{background:var(--bg-card);padding:2rem;border-radius:20px;margin-top:2rem;box-shadow:0 10px 40px var(--shadow);border:1px solid var(--border);}
+.iframe-container{position:relative;border-radius:16px;overflow:hidden;border:2px solid var(--border);background:white;height:500px;margin-top:1rem;}
+.iframe-container iframe{width:100%;height:100%;border:none;}
+
+.button-container{text-align:center;margin-top:2rem;display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;}
+button{padding:1rem 3rem;border:none;border-radius:16px;background:linear-gradient(135deg,var(--primary) 0%,var(--primary-dark) 100%);color:white;font-size:1.1rem;font-weight:600;cursor:pointer;transition:all .3s ease;box-shadow:0 10px 30px rgba(59,130,246,.4);position:relative;overflow:hidden;min-height:52px;}
+button.success-btn{background:linear-gradient(135deg,var(--success) 0%,#059669 100%);box-shadow:0 10px 30px rgba(16,185,129,.4);}
+button.secondary-btn{background:linear-gradient(135deg,var(--secondary) 0%,#d97706 100%);box-shadow:0 10px 30px rgba(245,158,11,.4);}
+button::before{content:'';position:absolute;top:50%;left:50%;width:0;height:0;border-radius:50%;background:rgba(255,255,255,.2);transform:translate(-50%,-50%);transition:width .6s ease,height .6s ease;}
+button:hover::before{width:300px;height:300px;}
+button:hover{transform:translateY(-3px);}
+button:active{transform:translateY(-1px);}
+button:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+
+.notification{position:fixed;top:1.5rem;right:2rem;padding:1.25rem 1.75rem;border-radius:16px;background:var(--bg-card);border:2px solid;box-shadow:0 10px 40px var(--shadow);z-index:1000;transform:translateX(420px);transition:transform .45s cubic-bezier(.34,1.56,.64,1);min-width:280px;max-width:380px;}
+.notification.show{transform:translateX(0);}
+.notification.success{border-color:var(--success);}
+.notification.error{border-color:var(--error);}
+.notification h4{margin-bottom:.25rem;font-size:1rem;}
+.notification.success h4{color:var(--success);}
+.notification.error h4{color:var(--error);}
+
+canvas#confetti-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;display:none;}
+
+.mobile-pill{display:none;background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.3);border-radius:10px;padding:.6rem 1rem;font-size:.8rem;color:var(--text-secondary);text-align:center;margin-bottom:.75rem;}
+
+.desktop-editor-wrapper{display:block;}
+
+@media(max-width:768px){
+  body{padding:1rem .75rem;}
+  h1{font-size:1.8rem;}
+  .user-header{flex-wrap:wrap;gap:.75rem;padding:.75rem 1rem;}
+  .header-section{padding:1.25rem 1rem;}
+  .selection-grid{grid-template-columns:1fr;gap:1rem;}
+  .board{grid-template-columns:1fr;gap:0;}
+  .panel{padding:1.25rem 1rem;border-radius:14px;}
+  .board .panel:first-child{border-bottom-left-radius:0;border-bottom-right-radius:0;border-bottom:none;}
+  .board .panel:last-child{border-top-left-radius:0;border-top-right-radius:0;}
+  .mobile-tabs{display:grid;}
+  .mobile-pill{display:block;}
+  .tab-panel{display:none;}
+  .tab-panel.active{display:block;}
+  .mobile-ring-wrap{display:flex;}
+  .mobile-editor-toggle{display:block;}
+  .desktop-editor-wrapper{display:none;}
+  .editor-section{padding:1.25rem 1rem;}
+  .compiler-section{padding:1.25rem 1rem;}
+  .iframe-container{height:380px;}
+  button{padding:.85rem 1.5rem;font-size:.95rem;}
+  .notification{right:1rem;left:1rem;min-width:unset;max-width:unset;}
+  .tutorial-toggle{display:block;}
+  .tutorial-body{max-height:0;opacity:0;}
+  .tutorial-body.collapsed{max-height:0;opacity:0;}
+  .tutorial-body.expanded{max-height:2000px;opacity:1;}
+  .unplace-hint{display:block;}
+}
+</style>
+</head>
+<body>
+<canvas id="confetti-canvas"></canvas>
+<main>
+
+<div class="user-header">
+  <div class="user-info">
+    <div class="user-avatar">👤</div>
+    <div class="user-details">
+      <h3 id="userName">Loading...</h3>
+      <p>Session: <span id="sessionTime">0:00</span></p>
+    </div>
+  </div>
+  <button class="logout-btn" onclick="logout()">Logout</button>
+</div>
+
+<h1>🐍 Learn Python</h1>
+
+<div class="header-section">
+  <div class="selection-grid">
+    <div>
+      <label for="categorySelect">📚 Category:</label>
+      <select id="categorySelect"></select>
+    </div>
+    <div>
+      <label for="activitySelect">🎯 Activity:</label>
+      <select id="activitySelect"></select>
+    </div>
+  </div>
+  <div id="activityTutorial" class="tutorial"></div>
+  <div id="activityCourse" class="course"></div>
+  <p id="activityDesc"></p>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-value" id="statCorrect">0</div>
+      <div class="stat-label">✅ Correct</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="statErrors">0</div>
+      <div class="stat-label">❌ Errors</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="statTime">0:00</div>
+      <div class="stat-label">⏱️ Time</div>
+    </div>
+  </div>
+
+  <div class="progress-section">
+    <h3 style="color:var(--success);margin-bottom:.5rem;">📊 Progress</h3>
+    <div class="mobile-ring-wrap">
+      <div class="ring-container">
+        <svg class="progress-ring-svg" width="80" height="80">
+          <circle class="progress-ring-bg" cx="40" cy="40" r="32"/>
+          <circle class="progress-ring-fill" id="ringFill" cx="40" cy="40" r="32" stroke-dasharray="201" stroke-dashoffset="201"/>
+        </svg>
+        <span class="ring-label" id="ringLabel">0%</span>
+      </div>
+    </div>
+    <div class="progress-bar-container">
+      <div class="progress-bar" id="progressBar" style="width:0%;">0%</div>
+    </div>
+    <p id="progressText" style="color:var(--text-secondary);font-size:.88rem;">Place all fragments in the slots</p>
+  </div>
+</div>
+
+<div class="mobile-tabs" id="mobileTabs">
+  <button class="mobile-tab active" id="tabPool" onclick="switchTab('pool')">
+    🧩 Fragments
+    <span class="tab-badge" id="poolBadge">0</span>
+  </button>
+  <button class="mobile-tab" id="tabSolution" onclick="switchTab('solution')">
+    ✨ Code
+    <span class="tab-badge" id="solutionBadge">0/0</span>
+  </button>
+</div>
+
+<div class="board">
+  <section class="panel" id="panelPool">
+    <h2>🧩 Available Fragments</h2>
+    <div class="mobile-pill" id="pillPool">👆 Tap to <strong>select</strong> a fragment</div>
+    <div id="pool" class="drop-zone tab-panel active"></div>
+  </section>
+  <section class="panel solution" id="panelSolution">
+    <h2>✨ Code to Complete</h2>
+    <div class="mobile-pill" id="pillSolution">🎯 Tap a slot <strong style="color:var(--accent)">🟡</strong> to place the fragment · Tap ✅ to undo</div>
+    <div id="solution" class="drop-zone tab-panel"></div>
+  </section>
+</div>
+
+<div class="editor-section">
+  <div class="editor-header">
+    <h2>💻 Code Editor</h2>
+    <div class="auto-update-indicator">
+      <span class="dot"></span>Auto-updated
+    </div>
+  </div>
+  <button class="mobile-editor-toggle" id="editorToggleBtn" onclick="toggleEditor()">💻 View generated code ▼</button>
+  <div class="mobile-editor-body collapsed" id="mobileEditorBody">
+    <div class="code-editor-wrapper">
+      <div id="monacoEditor"></div>
+    </div>
+  </div>
+  <div class="desktop-editor-wrapper">
+    <div class="code-editor-wrapper">
+      <div id="monacoEditorDesktop"></div>
+    </div>
+  </div>
+</div>
+
+<div class="compiler-section">
+  <h2>🚀 Online Python Compiler</h2>
+  <p style="color:var(--text-secondary);margin-bottom:1rem;">Code is auto-synced. Use the compiler below to run your program.</p>
+  <div class="iframe-container">
+    <iframe src="https://onecompiler.com/embed/python" title="Online Python Compiler"></iframe>
+  </div>
+</div>
+
+<div class="button-container">
+  <button class="secondary-btn" onclick="copyToCompiler()">📋 Copy Code</button>
+  <button class="success-btn" onclick="resetActivity()">🔄 Reset</button>
+</div>
+
+<div id="notification" class="notification"></div>
+</main>
+
+<div id="mobileSelectedBar">
+  <div id="mobileSelectedMeta">
+    <div id="mobileSelectedTag">Selected Fragment</div>
+    <div id="mobileSelectedLabel">…</div>
+  </div>
+  <button id="mobileCancelBtn" onclick="cancelTapSelection()">✕</button>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs/loader.min.js"></script>
+<script>
+function isMobile(){return window.innerWidth<=768||('ontouchstart' in window);}
+function vibrate(ms){try{navigator.vibrate&&navigator.vibrate(ms);}catch(e){}}
+
+const databaseURL="https://python-725d7-default-rtdb.firebaseio.com/";
+let currentUser=null,sessionStartTime=null,activityStartTime=null;
+let sessionTimer=null,activityTimer=null;
+let currentActivityStats={correctAttempts:0,errorAttempts:0,timeSpent:0};
+
+function startSessionTimer(){updateSessionTime();sessionTimer=setInterval(updateSessionTime,1000);}
+function updateSessionTime(){const diff=Math.floor((new Date()-sessionStartTime)/1000);document.getElementById('sessionTime').textContent=`${Math.floor(diff/60)}:${String(diff%60).padStart(2,'0')}`;}
+function startActivityTimer(){activityStartTime=new Date();updateActivityTime();activityTimer=setInterval(updateActivityTime,1000);}
+function updateActivityTime(){if(!activityStartTime)return;const diff=Math.floor((new Date()-activityStartTime)/1000);document.getElementById('statTime').textContent=`${Math.floor(diff/60)}:${String(diff%60).padStart(2,'0')}`;currentActivityStats.timeSpent=diff;}
+function stopActivityTimer(){if(activityTimer){clearInterval(activityTimer);activityTimer=null;}}
+function updateStatsDisplay(){document.getElementById('statCorrect').textContent=currentActivityStats.correctAttempts;document.getElementById('statErrors').textContent=currentActivityStats.errorAttempts;}
+async function saveActivityData(completed=false){
+  if(!currentUser||!currentActivity)return;
+  const key=`${currentCategory.id}_${currentActivity.id}`;
+  const ts=new Date().toISOString();
+  const d={categoryId:currentCategory.id,categoryName:currentCategory.name,activityId:currentActivity.id,activityName:currentActivity.plan,correctAttempts:currentActivityStats.correctAttempts,errorAttempts:currentActivityStats.errorAttempts,timeSpent:currentActivityStats.timeSpent,completed,lastAccess:ts,timestamp:ts};
+  try{
+    await fetch(`${databaseURL}/students/${currentUser.studentId}/activities/${key}.json`,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)});
+    await fetch(`${databaseURL}/students/${currentUser.studentId}.json`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({lastActivity:ts,lastActivityName:d.activityName})});
+  }catch(e){console.error(e);}
+}
+function logout(){if(confirm('Are you sure you want to logout?')){saveActivityData();sessionStorage.removeItem('userSession');if(sessionTimer)clearInterval(sessionTimer);if(activityTimer)clearInterval(activityTimer);window.location.href='login.html';}}
+setInterval(()=>{if(currentUser&&currentActivity)saveActivityData();},30000);
+window.addEventListener('beforeunload',()=>{if(currentUser&&currentActivity)saveActivityData();});
+
+// ═══════════════════════════════════════════
+// PYTHON CATEGORIES & ACTIVITIES
+// ═══════════════════════════════════════════
+const categories=[
+  {
+    "id":"basics","name":"Basics","icon":"🐣",
+    "activities":[
+      {"id":1,"plan":"Hello World","description":"Print your first message","tutorial":"<h3>📘 Tutorial: print()</h3><p>In Python, <code>print()</code> displays output to the screen. It's the most fundamental function!</p><pre><code class='language-python'>print(\"Hello, World!\")</code></pre>","course":"<p>Write a program that prints <strong>Hello, World!</strong></p>","solution":["print(\"Hello, World!\")"]},
+      {"id":2,"plan":"Variables","description":"Declare and display variables","tutorial":"<h3>📘 Tutorial: Variables</h3><p>Python variables are created by simply assigning a value. No type declaration needed!</p><ul style='margin-left:1.5rem;margin-top:.5rem'><li><code>name = \"Alice\"</code> — string</li><li><code>age = 25</code> — integer</li><li><code>price = 9.99</code> — float</li></ul>","course":"<p>Create a name and age variable and print them.</p>","solution":["name = \"Alice\"","age = 25","print(name)","print(age)"]},
+      {"id":3,"plan":"Data Types","description":"Explore int, float, str, bool","tutorial":"<h3>📘 Tutorial: Basic Types</h3><p>Python has four main primitive types: <code>int</code>, <code>float</code>, <code>str</code>, and <code>bool</code>. Use <code>type()</code> to check.</p>","course":"<p>Create one variable of each type and print its type.</p>","solution":["x = 42","y = 3.14","z = \"Python\"","b = True","print(type(x))","print(type(y))","print(type(z))","print(type(b))"]},
+      {"id":4,"plan":"String Concatenation","description":"Combine strings with + and f-strings","tutorial":"<h3>📘 Tutorial: String Concat</h3><p>Combine strings using <code>+</code>, or use f-strings: <code>f\"Hello {name}\"</code> for cleaner syntax.</p>","course":"<p>Print a greeting using an f-string with a name variable.</p>","solution":["name = \"Bob\"","greeting = f\"Hello, {name}!\"","print(greeting)"]},
+      {"id":5,"plan":"User Input","description":"Read input from the user","tutorial":"<h3>📘 Tutorial: input()</h3><p><code>input()</code> reads a line of text from the user. It always returns a string.</p><pre><code class='language-python'>name = input(\"Enter your name: \")</code></pre>","course":"<p>Ask the user for their name and greet them.</p>","solution":["name = input(\"Enter your name: \")","print(f\"Hello, {name}!\")"]},
+      {"id":6,"plan":"Type Conversion","description":"Convert between types","tutorial":"<h3>📘 Tutorial: Type Casting</h3><p>Convert between types using <code>int()</code>, <code>float()</code>, <code>str()</code>, etc.</p>","course":"<p>Read a number as string and convert it to int, then print doubled.</p>","solution":["n = input(\"Enter a number: \")","n = int(n)","print(n * 2)"]},
+      {"id":7,"plan":"Comments","description":"Write single and multi-line comments","tutorial":"<h3>📘 Tutorial: Comments</h3><p>Single-line: <code># This is a comment</code>. Multi-line: use triple quotes <code>\"\"\"...\"\"\"</code>.</p>","course":"<p>Write a program with a single-line comment and a print statement.</p>","solution":["# This prints a greeting","print(\"Hello!\")"]},
+      {"id":8,"plan":"Constants","description":"Use ALL_CAPS for constants","tutorial":"<h3>📘 Tutorial: Constants</h3><p>Python has no built-in constant keyword, but by convention we name them in ALL_CAPS.</p>","course":"<p>Define a PI constant and print it.</p>","solution":["PI = 3.14159","print(PI)"]}
+    ]
+  },
+  {
+    "id":"operators","name":"Operators","icon":"➕",
+    "activities":[
+      {"id":1,"plan":"Arithmetic Operators","description":"Add, subtract, multiply, divide","tutorial":"<h3>📘 Tutorial: Arithmetic</h3><p>Python supports: <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>, <code>//</code> (integer div), <code>%</code> (modulo), <code>**</code> (power).</p>","course":"<p>Calculate and print the sum, difference, product, and quotient of 10 and 3.</p>","solution":["a, b = 10, 3","print(a + b)","print(a - b)","print(a * b)","print(a / b)"]},
+      {"id":2,"plan":"Integer Division & Modulo","description":"Use // and %","tutorial":"<h3>📘 Tutorial: // and %</h3><p><code>//</code> returns the integer part of a division. <code>%</code> returns the remainder.</p>","course":"<p>Print the integer division and modulo of 17 and 5.</p>","solution":["a, b = 17, 5","print(a // b)","print(a % b)"]},
+      {"id":3,"plan":"Power Operator","description":"Use ** for exponentiation","tutorial":"<h3>📘 Tutorial: Power **</h3><p><code>x ** n</code> raises x to the power of n. Example: <code>2 ** 8</code> gives 256.</p>","course":"<p>Calculate and print 2 to the power of 10.</p>","solution":["result = 2 ** 10","print(result)"]},
+      {"id":4,"plan":"Comparison Operators","description":"Compare values","tutorial":"<h3>📘 Tutorial: Comparison</h3><p>Comparison operators return <code>True</code> or <code>False</code>: <code>==</code>, <code>!=</code>, <code>&gt;</code>, <code>&lt;</code>, <code>&gt;=</code>, <code>&lt;=</code>.</p>","course":"<p>Compare 10 and 5 with &gt;, == and != and print the results.</p>","solution":["a, b = 10, 5","print(a > b)","print(a == b)","print(a != b)"]},
+      {"id":5,"plan":"Logical Operators","description":"Use and, or, not","tutorial":"<h3>📘 Tutorial: Logical Operators</h3><p>Python uses <code>and</code>, <code>or</code>, <code>not</code> for boolean logic.</p>","course":"<p>Print the result of: True and False, True or False, not True.</p>","solution":["print(True and False)","print(True or False)","print(not True)"]},
+      {"id":6,"plan":"Assignment Operators","description":"Use +=, -=, *=, /=","tutorial":"<h3>📘 Tutorial: Assignment Operators</h3><p><code>x += 5</code> is shorthand for <code>x = x + 5</code>. Same for <code>-=</code>, <code>*=</code>, <code>/=</code>.</p>","course":"<p>Start with x=10, add 5, multiply by 2 and print the final value.</p>","solution":["x = 10","x += 5","x *= 2","print(x)"]},
+      {"id":7,"plan":"String Operators","description":"Repeat and concatenate strings","tutorial":"<h3>📘 Tutorial: String Operators</h3><p><code>+</code> concatenates strings. <code>*</code> repeats a string: <code>\"ha\" * 3</code> → <code>\"hahaha\"</code>.</p>","course":"<p>Print a string repeated 3 times and two strings concatenated.</p>","solution":["print(\"ha\" * 3)","print(\"Hello\" + \" \" + \"World\")"]},
+      {"id":8,"plan":"Operator Precedence","description":"Understand order of operations","tutorial":"<h3>📘 Tutorial: Precedence</h3><p>Python follows PEMDAS: Parentheses, Exponents, Multiply/Divide, Add/Subtract.</p>","course":"<p>Calculate 2 + 3 * 4 and (2 + 3) * 4 and show the difference.</p>","solution":["print(2 + 3 * 4)","print((2 + 3) * 4)"]}
+    ]
+  },
+  {
+    "id":"conditions","name":"Conditions","icon":"🔀",
+    "activities":[
+      {"id":1,"plan":"if Statement","description":"Test a simple condition","tutorial":"<h3>📘 Tutorial: if</h3><p>Use <code>if</code> to run code only when a condition is True. Indentation (4 spaces) is required in Python.</p><pre><code class='language-python'>if x > 0:\n    print(\"Positive\")</code></pre>","course":"<p>Check if a number is positive and print the result.</p>","solution":["number = 5","if number > 0:","    print(\"Positive\")"]},
+      {"id":2,"plan":"if-else","description":"Handle true and false cases","tutorial":"<h3>📘 Tutorial: if-else</h3><p><code>else</code> runs when the <code>if</code> condition is False.</p>","course":"<p>Check if a number is even or odd using if-else.</p>","solution":["n = 8","if n % 2 == 0:","    print(\"Even\")","else:","    print(\"Odd\")"]},
+      {"id":3,"plan":"if-elif-else","description":"Multiple conditions","tutorial":"<h3>📘 Tutorial: elif</h3><p><code>elif</code> (else if) allows you to chain multiple conditions.</p>","course":"<p>Grade a score: &gt;=16 Excellent, &gt;=10 Pass, else Fail.</p>","solution":["score = 12","if score >= 16:","    print(\"Excellent\")","elif score >= 10:","    print(\"Pass\")","else:","    print(\"Fail\")"]},
+      {"id":4,"plan":"Nested if","description":"if inside another if","tutorial":"<h3>📘 Tutorial: Nested Conditions</h3><p>You can place <code>if</code> statements inside other <code>if</code> blocks for more complex logic.</p>","course":"<p>Check if a number is positive and even using nested if.</p>","solution":["n = 4","if n > 0:","    if n % 2 == 0:","        print(\"Positive and Even\")"]},
+      {"id":5,"plan":"Ternary Expression","description":"One-line conditional","tutorial":"<h3>📘 Tutorial: Ternary</h3><p>Python ternary: <code>value_if_true if condition else value_if_false</code></p>","course":"<p>Determine if age &gt;= 18 is adult or minor in one line.</p>","solution":["age = 20","status = \"Adult\" if age >= 18 else \"Minor\"","print(status)"]},
+      {"id":6,"plan":"in Operator","description":"Check membership","tutorial":"<h3>📘 Tutorial: in Operator</h3><p>Use <code>in</code> to check if an element exists in a sequence or string.</p>","course":"<p>Check if \"Python\" is in a list of languages and print the result.</p>","solution":["languages = [\"Python\", \"Java\", \"C\"]","if \"Python\" in languages:","    print(\"Found!\")"]},
+      {"id":7,"plan":"and / or in Conditions","description":"Combine conditions","tutorial":"<h3>📘 Tutorial: Compound Conditions</h3><p>Combine conditions with <code>and</code> / <code>or</code> for more complex logic.</p>","course":"<p>Check if a number is between 1 and 10 inclusive using and.</p>","solution":["n = 7","if n >= 1 and n <= 10:","    print(\"In range\")","else:","    print(\"Out of range\")"]},
+      {"id":8,"plan":"match Statement","description":"Python 3.10+ pattern matching","tutorial":"<h3>📘 Tutorial: match (Python 3.10+)</h3><p><code>match</code> is Python's equivalent of switch-case. Each <code>case</code> pattern is tested in order.</p>","course":"<p>Use match to print a day name based on a number (1=Monday, 2=Tuesday, else=Other).</p>","solution":["day = 1","match day:","    case 1:","        print(\"Monday\")","    case 2:","        print(\"Tuesday\")","    case _:","        print(\"Other\")"]}
+    ]
+  },
+  {
+    "id":"loops","name":"Loops","icon":"🔁",
+    "activities":[
+      {"id":1,"plan":"for Loop with range","description":"Iterate a fixed number of times","tutorial":"<h3>📘 Tutorial: for loop</h3><p><code>for i in range(n):</code> iterates n times, from 0 to n-1. Use <code>range(1, 6)</code> for 1 to 5.</p>","course":"<p>Print numbers 1 through 5 using a for loop.</p>","solution":["for i in range(1, 6):","    print(i)"]},
+      {"id":2,"plan":"while Loop","description":"Loop while a condition is true","tutorial":"<h3>📘 Tutorial: while loop</h3><p><code>while condition:</code> repeats as long as the condition is True. Always make sure it eventually becomes False!</p>","course":"<p>Print numbers 1 to 3 using a while loop.</p>","solution":["i = 1","while i <= 3:","    print(i)","    i += 1"]},
+      {"id":3,"plan":"for Loop over List","description":"Iterate over list items","tutorial":"<h3>📘 Tutorial: Iterating Lists</h3><p>Use <code>for item in list:</code> to loop through each element of a list directly.</p>","course":"<p>Print each fruit in a list of fruits.</p>","solution":["fruits = [\"apple\", \"banana\", \"cherry\"]","for fruit in fruits:","    print(fruit)"]},
+      {"id":4,"plan":"break Statement","description":"Exit a loop early","tutorial":"<h3>📘 Tutorial: break</h3><p><code>break</code> immediately exits the loop, skipping any remaining iterations.</p>","course":"<p>Print numbers 1 to 5 but stop when you reach 3.</p>","solution":["for i in range(1, 6):","    if i == 3:","        break","    print(i)"]},
+      {"id":5,"plan":"continue Statement","description":"Skip to next iteration","tutorial":"<h3>📘 Tutorial: continue</h3><p><code>continue</code> skips the rest of the current iteration and moves to the next one.</p>","course":"<p>Print 1 to 5 but skip the number 3.</p>","solution":["for i in range(1, 6):","    if i == 3:","        continue","    print(i)"]},
+      {"id":6,"plan":"Nested Loops","description":"Loop inside a loop","tutorial":"<h3>📘 Tutorial: Nested Loops</h3><p>Place one loop inside another for working with 2D data like multiplication tables.</p>","course":"<p>Print a 3×3 multiplication table.</p>","solution":["for i in range(1, 4):","    for j in range(1, 4):","        print(i * j, end=\" \")","    print()"]},
+      {"id":7,"plan":"enumerate()","description":"Loop with index and value","tutorial":"<h3>📘 Tutorial: enumerate()</h3><p><code>enumerate()</code> returns both the index and the value when iterating a sequence.</p>","course":"<p>Print the index and value of each item in a list.</p>","solution":["colors = [\"red\", \"green\", \"blue\"]","for i, color in enumerate(colors):","    print(i, color)"]},
+      {"id":8,"plan":"List Comprehension","description":"Compact loop to build a list","tutorial":"<h3>📘 Tutorial: List Comprehension</h3><p>A compact way to create a list: <code>[expr for x in iterable if condition]</code></p>","course":"<p>Create a list of squares of even numbers from 1 to 10 using list comprehension.</p>","solution":["squares = [x**2 for x in range(1, 11) if x % 2 == 0]","print(squares)"]}
+    ]
+  },
+  {
+    "id":"data_structures","name":"Data Structures","icon":"📋",
+    "activities":[
+      {"id":1,"plan":"Lists","description":"Create and access a list","tutorial":"<h3>📘 Tutorial: Lists</h3><p>A list is an ordered, mutable collection. Access by index (0-based). Use <code>append()</code> to add items.</p><pre><code class='language-python'>fruits = [\"apple\", \"banana\"]\nprint(fruits[0])</code></pre>","course":"<p>Create a list of 3 numbers, print the second element.</p>","solution":["numbers = [10, 20, 30]","print(numbers[1])"]},
+      {"id":2,"plan":"List Methods","description":"append, remove, sort","tutorial":"<h3>📘 Tutorial: List Methods</h3><p>Common methods: <code>append()</code>, <code>remove()</code>, <code>pop()</code>, <code>sort()</code>, <code>len()</code>.</p>","course":"<p>Create a list, append a number, sort it, and print it.</p>","solution":["nums = [3, 1, 4, 1, 5]","nums.append(2)","nums.sort()","print(nums)"]},
+      {"id":3,"plan":"Tuples","description":"Immutable ordered collection","tutorial":"<h3>📘 Tutorial: Tuples</h3><p>Tuples are like lists but immutable (can't be changed). Use parentheses: <code>point = (3, 5)</code>.</p>","course":"<p>Create a tuple for coordinates and print its values.</p>","solution":["point = (3, 5)","print(point[0])","print(point[1])"]},
+      {"id":4,"plan":"Dictionaries","description":"Key-value pairs","tutorial":"<h3>📘 Tutorial: Dictionaries</h3><p>A dict stores key-value pairs. Access with <code>d[key]</code> or <code>d.get(key)</code>.</p><pre><code class='language-python'>person = {\"name\": \"Alice\", \"age\": 25}</code></pre>","course":"<p>Create a dictionary for a person and print their name and age.</p>","solution":["person = {\"name\": \"Alice\", \"age\": 25}","print(person[\"name\"])","print(person[\"age\"])"]},
+      {"id":5,"plan":"Dictionary Methods","description":"keys, values, items","tutorial":"<h3>📘 Tutorial: Dict Methods</h3><p><code>.keys()</code>, <code>.values()</code>, <code>.items()</code> let you iterate over a dictionary.</p>","course":"<p>Iterate over a dictionary and print each key-value pair.</p>","solution":["scores = {\"Alice\": 90, \"Bob\": 85}","for name, score in scores.items():","    print(f\"{name}: {score}\")"]},
+      {"id":6,"plan":"Sets","description":"Unique unordered collection","tutorial":"<h3>📘 Tutorial: Sets</h3><p>A set contains unique elements only. Defined with <code>{}</code>. Supports union, intersection, difference.</p>","course":"<p>Create two sets and print their intersection.</p>","solution":["a = {1, 2, 3, 4}","b = {3, 4, 5, 6}","print(a & b)"]},
+      {"id":7,"plan":"Slicing","description":"Extract parts of a list or string","tutorial":"<h3>📘 Tutorial: Slicing</h3><p>Slice syntax: <code>seq[start:end:step]</code>. Negative indices count from the end.</p>","course":"<p>Print the first 3 elements of a list and reverse a string using slicing.</p>","solution":["nums = [10, 20, 30, 40, 50]","print(nums[:3])","text = \"Python\"","print(text[::-1])"]},
+      {"id":8,"plan":"Nested Data Structures","description":"List of dictionaries","tutorial":"<h3>📘 Tutorial: Nested Structures</h3><p>You can nest lists and dicts for complex data: <code>[{\"name\": \"Alice\"}, {\"name\": \"Bob\"}]</code></p>","course":"<p>Create a list of 2 student dicts and print each student's name.</p>","solution":["students = [{\"name\": \"Alice\", \"grade\": \"A\"}, {\"name\": \"Bob\", \"grade\": \"B\"}]","for s in students:","    print(s[\"name\"])"]}
+    ]
+  },
+  {
+    "id":"functions","name":"Functions","icon":"⚙️",
+    "activities":[
+      {"id":1,"plan":"Define a Function","description":"Create and call a function","tutorial":"<h3>📘 Tutorial: def</h3><p>Define a function with <code>def name():</code>. Call it with <code>name()</code>. Indented code is the function body.</p>","course":"<p>Write a function that prints a greeting and call it.</p>","solution":["def greet():","    print(\"Hello, World!\")","greet()"]},
+      {"id":2,"plan":"Function Parameters","description":"Pass arguments to a function","tutorial":"<h3>📘 Tutorial: Parameters</h3><p>Parameters allow you to pass data into a function: <code>def greet(name):</code></p>","course":"<p>Write a function that takes a name and prints a personalized greeting.</p>","solution":["def greet(name):","    print(f\"Hello, {name}!\")","greet(\"Alice\")"]},
+      {"id":3,"plan":"Return Values","description":"Return a result from a function","tutorial":"<h3>📘 Tutorial: return</h3><p>Use <code>return</code> to send a value back from a function.</p>","course":"<p>Write a function that adds two numbers and returns the result.</p>","solution":["def add(a, b):","    return a + b","result = add(3, 4)","print(result)"]},
+      {"id":4,"plan":"Default Parameters","description":"Use default argument values","tutorial":"<h3>📘 Tutorial: Default Args</h3><p>You can set a default value: <code>def greet(name=\"World\"):</code>. If no argument is passed, the default is used.</p>","course":"<p>Write a greet function with a default name of 'World'.</p>","solution":["def greet(name=\"World\"):","    print(f\"Hello, {name}!\")","greet()","greet(\"Alice\")"]},
+      {"id":5,"plan":"*args","description":"Accept variable number of arguments","tutorial":"<h3>📘 Tutorial: *args</h3><p><code>*args</code> lets a function accept any number of positional arguments as a tuple.</p>","course":"<p>Write a function that prints all arguments passed to it.</p>","solution":["def show_all(*args):","    for item in args:","        print(item)","show_all(1, \"Python\", True)"]},
+      {"id":6,"plan":"**kwargs","description":"Accept keyword arguments","tutorial":"<h3>📘 Tutorial: **kwargs</h3><p><code>**kwargs</code> lets a function accept any number of keyword arguments as a dictionary.</p>","course":"<p>Write a function that prints all keyword arguments passed to it.</p>","solution":["def show_info(**kwargs):","    for key, value in kwargs.items():","        print(f\"{key}: {value}\")","show_info(name=\"Alice\", age=25)"]},
+      {"id":7,"plan":"Lambda Functions","description":"Anonymous one-line functions","tutorial":"<h3>📘 Tutorial: lambda</h3><p>Lambda creates a small anonymous function: <code>square = lambda x: x ** 2</code></p>","course":"<p>Create a lambda function to square a number and call it with 5.</p>","solution":["square = lambda x: x ** 2","print(square(5))"]},
+      {"id":8,"plan":"Recursion","description":"A function that calls itself","tutorial":"<h3>📘 Tutorial: Recursion</h3><p>A recursive function calls itself. Always include a base case to stop recursion.</p>","course":"<p>Write a recursive function to calculate the factorial of 5.</p>","solution":["def factorial(n):","    if n == 0:","        return 1","    return n * factorial(n - 1)","print(factorial(5))"]}
+    ]
+  },
+  {
+    "id":"modules","name":"Modules & Libraries","icon":"📦",
+    "activities":[
+      {"id":1,"plan":"import math","description":"Use the math module","tutorial":"<h3>📘 Tutorial: math Module</h3><p>The <code>math</code> module provides mathematical functions: <code>math.sqrt()</code>, <code>math.pi</code>, <code>math.floor()</code>.</p>","course":"<p>Import math and print the square root of 16 and the value of pi.</p>","solution":["import math","print(math.sqrt(16))","print(math.pi)"]},
+      {"id":2,"plan":"from import","description":"Import specific functions","tutorial":"<h3>📘 Tutorial: from ... import</h3><p>Use <code>from module import name</code> to import specific items without the module prefix.</p>","course":"<p>From math, import sqrt and pi directly and use them.</p>","solution":["from math import sqrt, pi","print(sqrt(25))","print(pi)"]},
+      {"id":3,"plan":"random Module","description":"Generate random numbers","tutorial":"<h3>📘 Tutorial: random Module</h3><p><code>random.randint(a, b)</code> returns a random integer between a and b. <code>random.choice()</code> picks from a sequence.</p>","course":"<p>Import random and print a random integer between 1 and 10.</p>","solution":["import random","n = random.randint(1, 10)","print(n)"]},
+      {"id":4,"plan":"datetime Module","description":"Work with dates and times","tutorial":"<h3>📘 Tutorial: datetime</h3><p><code>datetime.datetime.now()</code> returns the current date and time. Format with <code>.strftime()</code>.</p>","course":"<p>Import datetime and print today's date.</p>","solution":["import datetime","today = datetime.date.today()","print(today)"]},
+      {"id":5,"plan":"os Module","description":"Interact with the OS","tutorial":"<h3>📘 Tutorial: os Module</h3><p><code>os.getcwd()</code> returns the current directory. <code>os.listdir()</code> lists files. <code>os.path.exists()</code> checks if a path exists.</p>","course":"<p>Import os and print the current working directory.</p>","solution":["import os","print(os.getcwd())"]},
+      {"id":6,"plan":"sys Module","description":"System-level operations","tutorial":"<h3>📘 Tutorial: sys Module</h3><p><code>sys.version</code> shows the Python version. <code>sys.argv</code> contains command-line arguments.</p>","course":"<p>Import sys and print the Python version.</p>","solution":["import sys","print(sys.version)"]},
+      {"id":7,"plan":"json Module","description":"Parse and create JSON","tutorial":"<h3>📘 Tutorial: json Module</h3><p><code>json.dumps()</code> converts a Python object to JSON string. <code>json.loads()</code> parses a JSON string.</p>","course":"<p>Create a dict and convert it to a JSON string, then print it.</p>","solution":["import json","data = {\"name\": \"Alice\", \"age\": 25}","json_str = json.dumps(data)","print(json_str)"]},
+      {"id":8,"plan":"Custom Module","description":"Create and import your own module","tutorial":"<h3>📘 Tutorial: Custom Modules</h3><p>Any .py file is a module. Use <code>import filename</code> (without .py) to import it. Functions defined inside become available.</p>","course":"<p>Show how you'd import a custom module named 'utils' and call its greet() function.</p>","solution":["# In utils.py:","# def greet(): print(\"Hello from module!\")","# In main.py:","import utils  # assumes utils.py exists","utils.greet()"]}
+    ]
+  },
+  {
+    "id":"oop","name":"Object Oriented Programming","icon":"🏗️",
+    "activities":[
+      {"id":1,"plan":"Define a Class","description":"Create your first class","tutorial":"<h3>📘 Tutorial: Classes</h3><p>Define a class with <code>class Name:</code>. <code>__init__</code> is the constructor, called when creating an object. <code>self</code> refers to the instance.</p>","course":"<p>Create a Dog class with a name attribute and a bark() method.</p>","solution":["class Dog:","    def __init__(self, name):","        self.name = name","    def bark(self):","        print(f\"{self.name} says Woof!\")","dog = Dog(\"Rex\")","dog.bark()"]},
+      {"id":2,"plan":"Instance Attributes","description":"Store data in objects","tutorial":"<h3>📘 Tutorial: Attributes</h3><p>Attributes are variables that belong to an object. Set in <code>__init__</code> with <code>self.attr = value</code>.</p>","course":"<p>Create a Person class with name and age, then print them.</p>","solution":["class Person:","    def __init__(self, name, age):","        self.name = name","        self.age = age","p = Person(\"Alice\", 25)","print(p.name)","print(p.age)"]},
+      {"id":3,"plan":"Methods","description":"Functions inside a class","tutorial":"<h3>📘 Tutorial: Methods</h3><p>Methods are functions defined inside a class. They always take <code>self</code> as their first parameter.</p>","course":"<p>Create a Circle class with a radius and an area() method.</p>","solution":["import math","class Circle:","    def __init__(self, radius):","        self.radius = radius","    def area(self):","        return math.pi * self.radius ** 2","c = Circle(5)","print(c.area())"]},
+      {"id":4,"plan":"Inheritance","description":"Extend a parent class","tutorial":"<h3>📘 Tutorial: Inheritance</h3><p>A child class inherits all methods of the parent: <code>class Child(Parent):</code>. Use <code>super()</code> to call the parent's constructor.</p>","course":"<p>Create Animal and Dog classes where Dog extends Animal.</p>","solution":["class Animal:","    def __init__(self, name):","        self.name = name","    def speak(self):","        print(\"...\")","class Dog(Animal):","    def speak(self):","        print(f\"{self.name} barks!\")","d = Dog(\"Rex\")","d.speak()"]},
+      {"id":5,"plan":"__str__ Method","description":"String representation of an object","tutorial":"<h3>📘 Tutorial: __str__</h3><p>Define <code>__str__</code> to control what <code>print(obj)</code> shows. It should return a string.</p>","course":"<p>Create a Point class with __str__ that returns 'Point(x, y)'.</p>","solution":["class Point:","    def __init__(self, x, y):","        self.x = x","        self.y = y","    def __str__(self):","        return f\"Point({self.x}, {self.y})\"","p = Point(3, 5)","print(p)"]},
+      {"id":6,"plan":"Class Methods & Static Methods","description":"@classmethod and @staticmethod","tutorial":"<h3>📘 Tutorial: Class & Static Methods</h3><p><code>@classmethod</code> receives the class (<code>cls</code>) as first arg. <code>@staticmethod</code> receives no implicit args — it's just a regular function inside the class.</p>","course":"<p>Create a MathHelper class with a static method that adds two numbers.</p>","solution":["class MathHelper:","    @staticmethod","    def add(a, b):","        return a + b","print(MathHelper.add(3, 4))"]},
+      {"id":7,"plan":"Encapsulation","description":"Private attributes with __","tutorial":"<h3>📘 Tutorial: Encapsulation</h3><p>Prefix an attribute with <code>__</code> to make it private. Access it via a getter method or property.</p>","course":"<p>Create a BankAccount with a private __balance and a get_balance() method.</p>","solution":["class BankAccount:","    def __init__(self, amount):","        self.__balance = amount","    def get_balance(self):","        return self.__balance","acc = BankAccount(1000)","print(acc.get_balance())"]},
+      {"id":8,"plan":"Polymorphism","description":"Override methods in subclasses","tutorial":"<h3>📘 Tutorial: Polymorphism</h3><p>Multiple classes can have methods with the same name but different implementations. This is polymorphism.</p>","course":"<p>Create Cat and Dog classes both with a speak() method, call each.</p>","solution":["class Cat:","    def speak(self):","        print(\"Meow!\")","class Dog:","    def speak(self):","        print(\"Woof!\")","animals = [Cat(), Dog()]","for a in animals:","    a.speak()"]}
+    ]
+  }
+];
+
+// ═══════════════════════════════════════════
+// EDITOR SETUP
+// ═══════════════════════════════════════════
+let editorDesktop=null,editorMobile=null;
+require.config({paths:{vs:'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs'}});
+require(['vs/editor/editor.main'],function(){
+  const opts={language:'python',theme:'vs-dark',readOnly:true,minimap:{enabled:false},fontSize:13,fontFamily:"'JetBrains Mono',monospace",lineNumbers:'on',scrollBeyondLastLine:false,automaticLayout:true,value:'# Your code will appear here...'};
+  editorDesktop=monaco.editor.create(document.getElementById('monacoEditorDesktop'),opts);
+  editorMobile=monaco.editor.create(document.getElementById('monacoEditor'),{...opts});
+});
+
+function syncEditorVisibility(){
+  const dw=document.querySelector('.desktop-editor-wrapper');
+  if(isMobile()){dw.style.display='none';}else{dw.style.display='block';}
+}
+function toggleEditor(){
+  const body=document.getElementById('mobileEditorBody');
+  const btn=document.getElementById('editorToggleBtn');
+  if(body.classList.contains('collapsed')){body.classList.remove('collapsed');body.classList.add('expanded');btn.textContent='💻 Hide code ▲';}
+  else{body.classList.remove('expanded');body.classList.add('collapsed');btn.textContent='💻 View generated code ▼';}
+}
+
+// ═══════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════
+const categorySelect=document.getElementById('categorySelect');
+const activitySelect=document.getElementById('activitySelect');
+let currentCategory=categories[0],currentActivity=categories[0].activities[0];
+let completedSlots=0,totalSlots=0;
+let tapSelectedFragment=null;
+let activeTab='pool';
+let dragged=null;
+
+categories.forEach(cat=>{
+  const o=document.createElement('option');
+  o.value=cat.id;o.textContent=`${cat.icon} ${cat.name}`;
+  categorySelect.appendChild(o);
+});
+
+// ═══════════════════════════════════════════
+// TABS
+// ═══════════════════════════════════════════
+function switchTab(tab){
+  activeTab=tab;
+  document.getElementById('tabPool').classList.toggle('active',tab==='pool');
+  document.getElementById('tabSolution').classList.toggle('active',tab==='solution');
+  document.getElementById('pool').classList.toggle('active',tab==='pool');
+  document.getElementById('solution').classList.toggle('active',tab==='solution');
+  if(tab==='solution'&&tapSelectedFragment){document.querySelectorAll('.solution-slot:not(.filled)').forEach(s=>s.classList.add('tap-ready'));}
+}
+function updateTabBadges(){
+  const poolCount=document.querySelectorAll('#pool .code-line').length;
+  const filled=document.querySelectorAll('#solution .solution-slot.filled').length;
+  document.getElementById('poolBadge').textContent=poolCount;
+  document.getElementById('solutionBadge').textContent=`${filled}/${totalSlots}`;
+}
+
+// ═══════════════════════════════════════════
+// NOTIFICATIONS
+// ═══════════════════════════════════════════
+let notifTimer=null;
+function showNotification(type,title,message){
+  const n=document.getElementById('notification');
+  n.className=`notification ${type}`;
+  n.innerHTML=`<h4>${title}</h4><p style="color:var(--text-secondary);margin:0;font-size:.9rem;">${message}</p>`;
+  n.classList.add('show');
+  if(notifTimer)clearTimeout(notifTimer);
+  notifTimer=setTimeout(()=>n.classList.remove('show'),2800);
+}
+
+// ═══════════════════════════════════════════
+// PROGRESS + RING
+// ═══════════════════════════════════════════
+function updateProgress(){
+  const pct=totalSlots>0?Math.round((completedSlots/totalSlots)*100):0;
+  const bar=document.getElementById('progressBar');
+  bar.style.width=pct+'%';bar.textContent=pct+'%';
+  const circ=2*Math.PI*32;
+  const offset=circ-(pct/100)*circ;
+  document.getElementById('ringFill').style.strokeDashoffset=offset;
+  document.getElementById('ringFill').style.strokeDasharray=circ;
+  document.getElementById('ringLabel').textContent=pct+'%';
+  if(pct===100){
+    document.getElementById('progressText').innerHTML='✅ <strong>Exercise complete!</strong>';
+    document.getElementById('progressText').style.color='var(--success)';
+    showNotification('success','🎉 Congratulations!','Exercise completed successfully!');
+    saveActivityData(true);
+    launchConfetti();
+    vibrate([100,50,100,50,200]);
+  }else{
+    document.getElementById('progressText').innerHTML=`Place all fragments (${completedSlots}/${totalSlots})`;
+    document.getElementById('progressText').style.color='var(--text-secondary)';
+  }
+  updateTabBadges();
+}
+
+// ═══════════════════════════════════════════
+// CONFETTI
+// ═══════════════════════════════════════════
+function launchConfetti(){
+  const canvas=document.getElementById('confetti-canvas');
+  canvas.style.display='block';
+  const ctx=canvas.getContext('2d');
+  canvas.width=window.innerWidth;canvas.height=window.innerHeight;
+  const pieces=[];
+  const colors=['#3b82f6','#f59e0b','#10b981','#ef4444','#818cf8','#34d399','#fbbf24'];
+  for(let i=0;i<120;i++){pieces.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height-canvas.height,r:Math.random()*6+3,color:colors[Math.floor(Math.random()*colors.length)],vy:Math.random()*3+2,vx:(Math.random()-0.5)*3,rot:Math.random()*360,rotV:Math.random()*6-3,opacity:1,shape:Math.random()>.5?'circle':'rect',w:Math.random()*10+5,h:Math.random()*5+3});}
+  let frame=0;
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    pieces.forEach(p=>{ctx.save();ctx.globalAlpha=p.opacity;ctx.fillStyle=p.color;ctx.translate(p.x,p.y);ctx.rotate(p.rot*Math.PI/180);if(p.shape==='circle'){ctx.beginPath();ctx.arc(0,0,p.r,0,Math.PI*2);ctx.fill();}else{ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);}ctx.restore();p.y+=p.vy;p.x+=p.vx;p.rot+=p.rotV;if(frame>80)p.opacity-=0.02;});
+    frame++;
+    if(frame<120)requestAnimationFrame(draw);else{canvas.style.display='none';}
+  }
+  draw();
+}
+
+// ═══════════════════════════════════════════
+// LOAD ACTIVITY
+// ═══════════════════════════════════════════
+function loadCategoryActivities(catId){
+  const cat=categories.find(c=>c.id===catId);
+  if(!cat)return;
+  currentCategory=cat;
+  activitySelect.innerHTML='';
+  cat.activities.forEach(a=>{
+    const o=document.createElement('option');
+    o.value=a.id;o.textContent=`${a.id}. ${a.plan}`;
+    activitySelect.appendChild(o);
+  });
+  loadActivity(cat.activities[0].id);
+}
+
+function loadActivity(actId){
+  const act=currentCategory.activities.find(a=>a.id==actId);
+  if(!act)return;
+  currentActivity=act;
+  stopActivityTimer();
+  currentActivityStats={correctAttempts:0,errorAttempts:0,timeSpent:0};
+  updateStatsDisplay();
+  completedSlots=0;totalSlots=act.solution.length;
+  cancelTapSelection();
+
+  // Tutorial
+  const tutDiv=document.getElementById('activityTutorial');
+  if(act.tutorial){
+    tutDiv.innerHTML=`<button class="tutorial-toggle" onclick="toggleTutorial(this)">📘 Show Tutorial ▼</button><div class="tutorial-body collapsed">${act.tutorial}</div>`;
+    if(!isMobile()){tutDiv.querySelector('.tutorial-body').classList.replace('collapsed','expanded');}
+  }else{tutDiv.innerHTML='';}
+
+  // Course
+  const courseDiv=document.getElementById('activityCourse');
+  courseDiv.innerHTML=act.course?`<p>${act.course}</p>`:'';
+
+  document.getElementById('activityDesc').textContent=act.description||'';
+
+  // Shuffle solution lines
+  const shuffled=[...act.solution].sort(()=>Math.random()-.5);
+  const pool=document.getElementById('pool');
+  const solution=document.getElementById('solution');
+  pool.innerHTML='';solution.innerHTML='';
+
+  shuffled.forEach(frag=>createFragmentEl(frag,pool));
+  act.solution.forEach((frag,i)=>{
+    const slot=document.createElement('div');
+    slot.className='solution-slot';
+    slot.dataset.expected=frag;
+    slot.dataset.index=i+1;
+    slot.innerHTML=`<span class="slot-number">L${i+1}</span>⬚ Drop here<span class="unplace-hint">↩</span>`;
+    slot.addEventListener('dragover',e=>{e.preventDefault();handleDragOver(e);});
+    slot.addEventListener('dragleave',handleDragLeave);
+    slot.addEventListener('drop',handleDrop);
+    slot.addEventListener('click',handleSlotTap);
+    solution.appendChild(slot);
+  });
+
+  updateProgress();
+  updateEditableCode();
+  startActivityTimer();
+  if(isMobile())switchTab('pool');
+}
+
+function createFragmentEl(frag,parent){
+  const el=document.createElement('div');
+  el.className='code-line';
+  el.draggable=true;
+  el.dataset.fragment=frag;
+  el.appendChild(document.createTextNode(frag));
+  el.addEventListener('dragstart',e=>{dragged=el;el.classList.add('dragging');});
+  el.addEventListener('dragend',e=>{el.classList.remove('dragging');dragged=null;});
+  el.addEventListener('click',handleFragmentTap);
+  parent.appendChild(el);
+}
+
+function toggleTutorial(btn){
+  const body=btn.nextElementSibling;
+  if(body.classList.contains('collapsed')){body.classList.replace('collapsed','expanded');btn.textContent='📘 Hide Tutorial ▲';}
+  else{body.classList.replace('expanded','collapsed');btn.textContent='📘 Show Tutorial ▼';}
+}
+
+// ═══════════════════════════════════════════
+// SELECTORS
+// ═══════════════════════════════════════════
+categorySelect.addEventListener('change',()=>{loadCategoryActivities(categorySelect.value);});
+activitySelect.addEventListener('change',()=>{loadActivity(parseInt(activitySelect.value));});
+
+// ═══════════════════════════════════════════
+// DRAG & DROP
+// ═══════════════════════════════════════════
+function handleDragOver(e){
+  e.preventDefault();
+  const s=e.currentTarget;
+  if(!s.classList.contains('filled'))s.style.borderColor='var(--primary-light)';
+}
+function handleDragLeave(e){
+  const s=e.currentTarget;
+  if(!s.classList.contains('filled'))s.style.borderColor='';
+}
+function handleDrop(e){
+  e.preventDefault();
+  const s=e.currentTarget;
+  if(!dragged||s.classList.contains('filled')){dragged=null;return;}
+  s.style.borderColor='';
+  placeFragment(dragged,s);dragged=null;
+}
+
+// ═══════════════════════════════════════════
+// MOBILE TAP
+// ═══════════════════════════════════════════
+function addRipple(el,e){
+  const r=document.createElement('span');
+  r.className='ripple';
+  const rect=el.getBoundingClientRect();
+  const size=Math.max(rect.width,rect.height);
+  r.style.cssText=`width:${size}px;height:${size}px;left:${(e.clientX-rect.left)-size/2}px;top:${(e.clientY-rect.top)-size/2}px;`;
+  el.appendChild(r);
+  setTimeout(()=>r.remove(),600);
+}
+function handleFragmentTap(e){
+  addRipple(e.currentTarget,e);
+  const frag=e.currentTarget;
+  if(tapSelectedFragment===frag){cancelTapSelection();return;}
+  if(tapSelectedFragment)tapSelectedFragment.classList.remove('tap-selected');
+  tapSelectedFragment=frag;frag.classList.add('tap-selected');vibrate(15);
+  document.getElementById('mobileSelectedLabel').textContent=frag.dataset.fragment;
+  document.getElementById('mobileSelectedBar').classList.add('visible');
+  document.body.classList.add('has-mobile-bar');
+  document.querySelectorAll('.solution-slot:not(.filled)').forEach(s=>s.classList.add('tap-ready'));
+  if(isMobile()&&activeTab==='pool'){setTimeout(()=>switchTab('solution'),200);}
+}
+function handleSlotTap(e){
+  addRipple(e.currentTarget,e);
+  const slot=e.currentTarget;
+  if(slot.classList.contains('filled')){if(isMobile())unplaceFragment(slot);return;}
+  if(tapSelectedFragment){slot.classList.remove('tap-ready');placeFragment(tapSelectedFragment,slot);cancelTapSelection();}
+}
+function cancelTapSelection(){
+  if(tapSelectedFragment){tapSelectedFragment.classList.remove('tap-selected');tapSelectedFragment=null;}
+  document.getElementById('mobileSelectedBar').classList.remove('visible');
+  document.body.classList.remove('has-mobile-bar');
+  document.querySelectorAll('.solution-slot.tap-ready').forEach(s=>s.classList.remove('tap-ready'));
+}
+
+// ═══════════════════════════════════════════
+// PLACE / UNPLACE
+// ═══════════════════════════════════════════
+function placeFragment(fragEl,slot){
+  const expected=slot.dataset.expected;
+  const dropped=fragEl.dataset.fragment;
+  if(dropped===expected){
+    slot.dataset.placedFragment=dropped;
+    slot.classList.add('filled','mobile-unplaceable');
+    slot.innerHTML='';
+    slot.appendChild(document.createTextNode(dropped));
+    const hint=document.createElement('span');hint.className='unplace-hint';hint.textContent='↩';slot.appendChild(hint);
+    fragEl.remove();completedSlots++;
+    currentActivityStats.correctAttempts++;
+    vibrate(40);
+    slot.style.animation='correctPop .35s ease';
+    setTimeout(()=>slot.style.animation='',400);
+    updateStatsDisplay();updateProgress();updateEditableCode();
+    if(isMobile()){setTimeout(()=>{const next=document.querySelector('.solution-slot:not(.filled)');if(next)next.scrollIntoView({behavior:'smooth',block:'nearest'});},300);}
+    if(completedSlots<totalSlots)showNotification('success','✅ Correct!','Fragment placed correctly.');
+  }else{
+    slot.classList.add('error');slot.classList.remove('tap-ready');
+    currentActivityStats.errorAttempts++;vibrate([60,30,60]);updateStatsDisplay();
+    showNotification('error','❌ Incorrect','This fragment does not go here. Try again!');
+    if(fragEl){fragEl.style.animation='shake .5s ease';setTimeout(()=>{if(fragEl)fragEl.style.animation='';},600);}
+    setTimeout(()=>{slot.classList.remove('error');if(tapSelectedFragment)slot.classList.add('tap-ready');},800);
+  }
+  saveActivityData();
+}
+function unplaceFragment(slot){
+  if(!slot.classList.contains('filled'))return;
+  const frag=slot.dataset.placedFragment||'';
+  slot.innerHTML=`<span class="slot-number">L${slot.dataset.index}</span>⬚ Drop here<span class="unplace-hint">↩</span>`;
+  slot.classList.remove('filled','mobile-unplaceable');
+  vibrate(20);
+  createFragmentEl(frag,document.getElementById('pool'));
+  completedSlots--;updateProgress();updateEditableCode();
+  if(isMobile())switchTab('pool');
+  showNotification('success','↩️ Undone','Fragment returned to pool.');
+}
+
+// ═══════════════════════════════════════════
+// EDITOR UPDATE
+// ═══════════════════════════════════════════
+function updateEditableCode(){
+  const slots=document.querySelectorAll('#solution .solution-slot');
+  let code='';
+  slots.forEach(s=>{
+    if(s.classList.contains('filled')){code+=(s.dataset.placedFragment||'')+'\n';}
+    else{code+='# ⬚ line to complete\n';}
+  });
+  if(editorDesktop)editorDesktop.setValue(code);
+  if(editorMobile)editorMobile.setValue(code);
+}
+
+// ═══════════════════════════════════════════
+// COPY / RESET
+// ═══════════════════════════════════════════
+function copyToCompiler(){
+  const slots=document.querySelectorAll('#solution .solution-slot');
+  if(![...slots].every(s=>s.classList.contains('filled'))){showNotification('error','⚠️ Incomplete Code','Complete all slots first.');return;}
+  let code='';slots.forEach(s=>{code+=(s.dataset.placedFragment||'')+'\n';});
+  navigator.clipboard.writeText(code).then(()=>{showNotification('success','📋 Code copied!','Paste it in the compiler below.');document.querySelector('.compiler-section').scrollIntoView({behavior:'smooth'});}).catch(()=>showNotification('error','❌ Error','Could not copy automatically.'));
+}
+function resetActivity(){
+  if(confirm('Reset this activity?')){saveActivityData();cancelTapSelection();loadActivity(currentActivity.id);showNotification('success','🔄 Reset','Activity has been reset.');}
+}
+
+// ═══════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════
+window.onload=function(){
+  const session=sessionStorage.getItem('userSession');
+  if(session){currentUser=JSON.parse(session);sessionStartTime=new Date(currentUser.loginTime);document.getElementById('userName').textContent=`${currentUser.name} ${currentUser.lastname}`;}
+  else{document.getElementById('userName').textContent='Student';sessionStartTime=new Date();}
+  startSessionTimer();
+  syncEditorVisibility();
+  loadCategoryActivities(currentCategory.id);
+};
+window.addEventListener('resize',()=>{syncEditorVisibility();});
+</script>
+</body>
+</html>
