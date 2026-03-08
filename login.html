@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Login – Python</title>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #f59e0b 100%);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        position: relative;
+        overflow: hidden;
+    }
+    body::before {
+        content: '';
+        position: absolute;
+        width: 500px; height: 500px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 50%;
+        top: -250px; right: -250px;
+        animation: float 6s ease-in-out infinite;
+    }
+    body::after {
+        content: '';
+        position: absolute;
+        width: 400px; height: 400px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 50%;
+        bottom: -200px; left: -200px;
+        animation: float 8s ease-in-out infinite;
+    }
+    @keyframes float { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-20px);} }
+    .container {
+        background: rgba(255,255,255,0.97);
+        backdrop-filter: blur(10px);
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        width: 100%; max-width: 450px;
+        position: relative; z-index: 1;
+        animation: slideIn 0.5s ease-out;
+    }
+    @keyframes slideIn { from{opacity:0;transform:translateY(-30px);} to{opacity:1;transform:translateY(0);} }
+    .logo { text-align: center; margin-bottom: 20px; }
+    .logo-icon {
+        width: 70px; height: 70px;
+        background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+        border-radius: 50%;
+        display: inline-flex; align-items: center; justify-content: center;
+        font-size: 36px; margin-bottom: 10px;
+        box-shadow: 0 4px 15px rgba(59,130,246,0.4);
+    }
+    h2 { text-align:center; color:#333; margin-bottom:10px; font-size:28px; font-weight:600; }
+    .subtitle { text-align:center; color:#666; margin-bottom:30px; font-size:14px; }
+    .input-group { position:relative; margin-bottom:25px; }
+    .input-group label { position:absolute; left:15px; top:12px; color:#999; font-size:14px; pointer-events:none; transition:all .3s; background:white; padding:0 5px; }
+    .input-group input { width:100%; padding:12px 15px; border:2px solid #e0e0e0; border-radius:10px; font-size:14px; transition:all .3s; background:white; }
+    .input-group input:focus { outline:none; border-color:#3b82f6; box-shadow:0 0 0 3px rgba(59,130,246,0.1); }
+    .input-group input:focus + label,
+    .input-group input:not(:placeholder-shown) + label { top:-10px; left:10px; font-size:12px; color:#3b82f6; font-weight:600; }
+    .password-toggle { position:absolute; right:15px; top:12px; cursor:pointer; color:#999; user-select:none; font-size:20px; transition:color .3s; }
+    .password-toggle:hover { color:#3b82f6; }
+    .remember-forgot { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; font-size:13px; }
+    .remember-forgot label { display:flex; align-items:center; color:#666; cursor:pointer; }
+    .remember-forgot input[type="checkbox"] { margin-right:6px; cursor:pointer; }
+    .remember-forgot a { color:#3b82f6; text-decoration:none; font-weight:600; transition:color .3s; }
+    .remember-forgot a:hover { color:#1d4ed8; text-decoration:underline; }
+    button {
+        width:100%; padding:14px;
+        background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+        color:white; border:none; border-radius:10px;
+        font-size:16px; font-weight:600; cursor:pointer; transition:all .3s;
+        box-shadow:0 4px 15px rgba(59,130,246,0.4);
+    }
+    button:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(59,130,246,0.6); }
+    button:active { transform:translateY(0); }
+    .error { background:#fee; color:#c33; padding:12px; border-radius:8px; font-size:13px; margin-bottom:20px; border-left:4px solid #c33; display:none; animation:shake .3s; }
+    .error.show { display:block; }
+    @keyframes shake { 0%,100%{transform:translateX(0);} 25%{transform:translateX(-10px);} 75%{transform:translateX(10px);} }
+    .link-text { text-align:center; margin-top:20px; color:#666; font-size:14px; }
+    .link-text a { color:#3b82f6; text-decoration:none; font-weight:600; transition:color .3s; }
+    .link-text a:hover { color:#1d4ed8; text-decoration:underline; }
+    button.loading { pointer-events:none; opacity:.7; }
+    button.loading::after { content:''; position:absolute; width:16px; height:16px; top:50%; left:50%; margin:-8px; border:2px solid transparent; border-top-color:white; border-radius:50%; animation:spin .6s linear infinite; }
+    @keyframes spin { to{transform:rotate(360deg);} }
+    .divider { display:flex; align-items:center; text-align:center; color:#999; margin:25px 0; font-size:13px; }
+    .divider::before,.divider::after { content:''; flex:1; border-bottom:1px solid #e0e0e0; }
+    .divider span { padding:0 10px; }
+    @media(max-width:480px){ .container{padding:30px 20px;} .remember-forgot{flex-direction:column;gap:10px;align-items:flex-start;} }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="logo">
+    <div class="logo-icon">🐍</div>
+  </div>
+  <h2>Welcome Back</h2>
+  <p class="subtitle">Login to your Python learning platform</p>
+
+  <div class="error" id="error"></div>
+
+  <div class="input-group">
+    <input type="text" id="id_student" placeholder=" " autocomplete="username">
+    <label>Student ID</label>
+  </div>
+
+  <div class="input-group">
+    <input type="password" id="password" placeholder=" " autocomplete="current-password">
+    <label>Password</label>
+    <span class="password-toggle" onclick="togglePassword()">👁️</span>
+  </div>
+
+  <div class="remember-forgot">
+    <label>
+      <input type="checkbox" id="remember">
+      Remember me
+    </label>
+    <a href="#" onclick="alert('Please contact your administrator to reset your password.'); return false;">Forgot password?</a>
+  </div>
+
+  <button onclick="login()">Login</button>
+
+  <div class="divider"><span>OR</span></div>
+
+  <p class="link-text">Don't have an account? <a href="registration.html">Register here</a></p>
+</div>
+
+<script>
+const databaseURL = "https://python-725d7-default-rtdb.firebaseio.com/";
+
+function togglePassword(){
+  const f=document.getElementById('password');
+  f.type=f.type==='password'?'text':'password';
+}
+function showError(msg){const e=document.getElementById('error');e.innerText=msg;e.classList.add('show');}
+function hideError(){document.getElementById('error').classList.remove('show');}
+
+function login(){
+  const id=document.getElementById('id_student').value.trim();
+  const pw=document.getElementById('password').value;
+  const btn=document.querySelector('button');
+  hideError();
+  if(!id||!pw){showError("Please enter both Student ID and Password.");return;}
+  btn.classList.add('loading');btn.style.position='relative';
+  const orig=btn.innerText;btn.innerText='';
+  fetch(`${databaseURL}/students/${id}.json`)
+  .then(r=>r.json())
+  .then(data=>{
+    btn.classList.remove('loading');btn.innerText=orig;
+    if(!data){showError("Student not found. Please check your Student ID.");return;}
+    if(data.password===pw){
+      btn.innerHTML='✓ Success!';
+      btn.style.background='linear-gradient(135deg,#10b981 0%,#34d399 100%)';
+      const session={studentId:id,name:data.name,lastname:data.lastname,loginTime:new Date().toISOString()};
+      sessionStorage.setItem('userSession',JSON.stringify(session));
+      if(document.getElementById('remember').checked)localStorage.setItem('studentId',id);
+      fetch(`${databaseURL}/students/${id}.json`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({lastLogin:new Date().toISOString()})});
+      setTimeout(()=>{window.location.href="index.html";},500);
+    }else{showError("Incorrect password. Please try again.");}
+  })
+  .catch(err=>{btn.classList.remove('loading');btn.innerText=orig;showError("Connection error. Please try again.");});
+}
+
+document.addEventListener('keypress',e=>{if(e.key==='Enter')login();});
+window.onload=function(){
+  const session=sessionStorage.getItem('userSession');
+  if(session){window.location.href="index.html";return;}
+  const savedId=localStorage.getItem('studentId');
+  const cb=document.getElementById('remember');
+  if(savedId){document.getElementById('id_student').value=savedId;cb.checked=true;}
+  cb.addEventListener('change',function(){if(!this.checked)localStorage.removeItem('studentId');});
+};
+document.getElementById('id_student').addEventListener('blur',function(){
+  if(document.getElementById('remember').checked)localStorage.setItem('studentId',this.value.trim());
+});
+</script>
+</body>
+</html>
