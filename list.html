@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Dashboard</title>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+    }
+
+    .header {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        padding: 25px 40px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        margin-bottom: 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        animation: slideDown 0.5s ease-out;
+    }
+
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .header h1 {
+        color: #333;
+        font-size: 28px;
+        font-weight: 600;
+    }
+
+    .header-actions {
+        display: flex;
+        gap: 15px;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+
+    .btn-secondary {
+        background: white;
+        color: #667eea;
+        border: 2px solid #667eea;
+    }
+
+    .btn-secondary:hover {
+        background: #667eea;
+        color: white;
+    }
+
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 25px;
+        max-width: 1400px;
+        margin: 0 auto;
+        animation: fadeIn 0.6s ease-out;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    .card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        overflow: hidden;
+    }
+
+    .card-header {
+        padding: 20px 30px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .card-header h2 {
+        font-size: 20px;
+        font-weight: 600;
+    }
+
+    .card-body {
+        padding: 25px 30px;
+    }
+
+    .two-column {
+        display: grid;
+        grid-template-columns: 350px 1fr;
+        gap: 30px;
+    }
+
+    /* Custom Scrollbar */
+    .card-body::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .card-body::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+
+    .card-body::-webkit-scrollbar-thumb {
+        background: #667eea;
+        border-radius: 10px;
+    }
+
+    .card-body::-webkit-scrollbar-thumb:hover {
+        background: #764ba2;
+    }
+
+    /* Student List Styles */
+    .student-list-container {
+        max-height: 500px;
+        overflow-y: auto;
+        padding-right: 10px;
+    }
+
+    .search-box {
+        margin-bottom: 20px;
+    }
+
+    .search-box input {
+        width: 100%;
+        padding: 12px 15px 12px 40px;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        font-size: 14px;
+        transition: all 0.3s ease;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: 12px center;
+    }
+
+    .search-box input:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .student-item {
+        background: white;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        border: 2px solid #f0f0f0;
+    }
+
+    .student-item:hover {
+        border-color: #667eea;
+        transform: translateX(3px);
+        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
+    }
+
+    .student-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .student-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+        font-size: 16px;
+        flex-shrink: 0;
+    }
+
+    .student-details h3 {
+        font-size: 14px;
+        color: #333;
+        margin-bottom: 3px;
+        font-weight: 600;
+    }
+
+    .student-details p {
+        font-size: 11px;
+        color: #999;
+    }
+
+    .student-badge {
+        background: #10b981;
+        color: white;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 600;
+    }
+
+    .student-badge.low {
+        background: #ef4444;
+    }
+
+    .student-badge.medium {
+        background: #f59e0b;
+    }
+
+    /* Calendar Styles */
+    .calendar-controls {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 10px;
+    }
+
+    .week-selector {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .week-selector button {
+        background: #667eea;
+        color: white;
+        border: none;
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 18px;
+        transition: all 0.3s ease;
+        font-weight: bold;
+    }
+
+    .week-selector button:hover {
+        background: #764ba2;
+    }
+
+    .current-week {
+        font-weight: 700;
+        color: #333;
+        font-size: 16px;
+        min-width: 120px;
+        text-align: center;
+    }
+
+    .calendar-wrapper {
+        overflow-x: auto;
+    }
+
+    .calendar-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .calendar-table th {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 15px 10px;
+        text-align: center;
+        font-weight: 600;
+        font-size: 13px;
+    }
+
+    .calendar-table th:first-child {
+        text-align: left;
+        padding-left: 20px;
+    }
+
+    .calendar-table td {
+        padding: 12px 10px;
+        border-bottom: 1px solid #f0f0f0;
+        text-align: center;
+    }
+
+    .calendar-table td:first-child {
+        text-align: left;
+        font-weight: 600;
+        color: #333;
+        font-size: 13px;
+        padding-left: 20px;
+    }
+
+    .calendar-table tr:hover {
+        background: #f8f9fa;
+    }
+
+    .day-cell {
+        display: flex;
+        gap: 6px;
+        justify-content: center;
+    }
+
+    .attendance-btn {
+        width: 35px;
+        height: 35px;
+        padding: 0;
+        border: 2px solid #e0e0e0;
+        background: white;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 600;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .attendance-btn.present {
+        background: #10b981;
+        border-color: #10b981;
+        color: white;
+    }
+
+    .attendance-btn.absent {
+        background: #ef4444;
+        border-color: #ef4444;
+        color: white;
+    }
+
+    .attendance-btn:hover {
+        transform: scale(1.1);
+    }
+
+    .attendance-btn:active {
+        transform: scale(0.95);
+    }
+
+    .stats-bar {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+
+    .stat-item {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        padding: 20px;
+        border-radius: 12px;
+        text-align: center;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+    }
+
+    .stat-item:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        border-color: #667eea;
+    }
+
+    .stat-value {
+        font-size: 32px;
+        font-weight: 700;
+        color: #667eea;
+        margin-bottom: 5px;
+    }
+
+    .stat-label {
+        font-size: 12px;
+        color: #666;
+        text-transform: uppercase;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+    }
+
+    .stat-item.success .stat-value {
+        color: #10b981;
+    }
+
+    .stat-item.danger .stat-value {
+        color: #ef4444;
+    }
+
+    .stat-item.warning .stat-value {
+        color: #f59e0b;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        margin-top: 20px;
+    }
+
+    .mini-stat {
+        background: white;
+        padding: 15px;
+        border-radius: 10px;
+        border: 2px solid #e9ecef;
+    }
+
+    .mini-stat-label {
+        font-size: 11px;
+        color: #999;
+        text-transform: uppercase;
+        margin-bottom: 5px;
+    }
+
+    .mini-stat-value {
+        font-size: 20px;
+        font-weight: 700;
+        color: #333;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 40px;
+        color: #999;
+    }
+
+    .empty-state svg {
+        width: 80px;
+        height: 80px;
+        margin-bottom: 15px;
+        opacity: 0.5;
+    }
+
+    @media (max-width: 1200px) {
+        .two-column {
+            grid-template-columns: 1fr;
+        }
+        
+        .stats-bar {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .header {
+            flex-direction: column;
+            gap: 15px;
+            padding: 20px;
+        }
+
+        .header h1 {
+            font-size: 22px;
+        }
+
+        .header-actions {
+            width: 100%;
+            flex-direction: column;
+        }
+
+        .btn {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .stats-bar {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .calendar-controls {
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .calendar-table {
+            font-size: 11px;
+        }
+
+        .calendar-table th,
+        .calendar-table td {
+            padding: 8px 5px;
+        }
+
+        .attendance-btn {
+            width: 30px;
+            height: 30px;
+            font-size: 14px;
+        }
+
+        .day-cell {
+            gap: 4px;
+        }
+    }
+</style>
+</head>
+<body>
+
+<div class="header">
+    <h1>📚 Student Dashboard</h1>
+    <div class="header-actions">
+        <button class="btn btn-primary" onclick="loadStudents()">🔄 Refresh</button>
+        <a href="register.html" class="btn btn-secondary">➕ Add Student</a>
+    </div>
+</div>
+
+<div class="dashboard-grid">
+    
+    <!-- Weekly Statistics Card -->
+    <div class="card">
+        <div class="card-header">
+            <h2>📊 Weekly Statistics</h2>
+            <div class="week-selector">
+                <button onclick="changeWeek(-1)">◀</button>
+                <span class="current-week" id="currentWeek">Week 1</span>
+                <button onclick="changeWeek(1)">▶</button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="stats-bar">
+                <div class="stat-item success">
+                    <div class="stat-value" id="totalPresent">0</div>
+                    <div class="stat-label">✓ Present</div>
+                </div>
+                <div class="stat-item danger">
+                    <div class="stat-value" id="totalAbsent">0</div>
+                    <div class="stat-label">✗ Absent</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="avgAttendance">0%</div>
+                    <div class="stat-label">Average</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="totalSessions">0</div>
+                    <div class="stat-label">Sessions</div>
+                </div>
+                <div class="stat-item warning">
+                    <div class="stat-value" id="studentCount">0</div>
+                    <div class="stat-label">Students</div>
+                </div>
+            </div>
+
+            <!-- Daily Breakdown -->
+            <h3 style="margin: 25px 0 15px 0; color: #333; font-size: 16px;">Daily Breakdown</h3>
+            <div class="stats-grid">
+                <div class="mini-stat">
+                    <div class="mini-stat-label">Monday</div>
+                    <div class="mini-stat-value" id="mondayRate">0%</div>
+                </div>
+                <div class="mini-stat">
+                    <div class="mini-stat-label">Tuesday</div>
+                    <div class="mini-stat-value" id="tuesdayRate">0%</div>
+                </div>
+                <div class="mini-stat">
+                    <div class="mini-stat-label">Wednesday</div>
+                    <div class="mini-stat-value" id="wednesdayRate">0%</div>
+                </div>
+                <div class="mini-stat">
+                    <div class="mini-stat-label">Thursday</div>
+                    <div class="mini-stat-value" id="thursdayRate">0%</div>
+                </div>
+                <div class="mini-stat">
+                    <div class="mini-stat-label">Friday</div>
+                    <div class="mini-stat-value" id="fridayRate">0%</div>
+                </div>
+                <div class="mini-stat">
+                    <div class="mini-stat-label">Best Day</div>
+                    <div class="mini-stat-value" id="bestDay" style="color: #10b981;">-</div>
+                </div>
+            </div>
+
+            <!-- Student Performance -->
+            <h3 style="margin: 25px 0 15px 0; color: #333; font-size: 16px;">Student Performance</h3>
+            <div class="stats-grid">
+                <div class="mini-stat">
+                    <div class="mini-stat-label">Perfect Attendance</div>
+                    <div class="mini-stat-value" id="perfectCount" style="color: #10b981;">0</div>
+                </div>
+                <div class="mini-stat">
+                    <div class="mini-stat-label">At Risk</div>
+                    <div class="mini-stat-value" id="atRiskCount" style="color: #ef4444;">0</div>
+                </div>
+                <div class="mini-stat">
+                    <div class="mini-stat-label">Highest</div>
+                    <div class="mini-stat-value" id="highestStudent" style="font-size: 14px; color: #667eea;">-</div>
+                </div>
+                <div class="mini-stat">
+                    <div class="mini-stat-label">Needs Attention</div>
+                    <div class="mini-stat-value" id="lowestStudent" style="font-size: 14px; color: #f59e0b;">-</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content: Students and Calendar Side by Side -->
+    <div class="card">
+        <div class="card-header">
+            <h2>👥 Students & Attendance</h2>
+            <button class="btn btn-secondary" style="background: rgba(255,255,255,0.2); border: none; color: white;" onclick="saveAttendance()">💾 Save Attendance</button>
+        </div>
+        <div class="card-body">
+            <div class="two-column">
+                <!-- Student List -->
+                <div>
+                    <div class="search-box">
+                        <input type="text" id="searchInput" placeholder="Search students..." onkeyup="filterStudents()">
+                    </div>
+                    <div class="student-list-container" id="studentList"></div>
+                </div>
+
+                <!-- Attendance Calendar -->
+                <div>
+                    <div class="calendar-controls">
+                        <div style="font-size: 14px; color: #666;">
+                            <strong id="dateRange"></strong>
+                        </div>
+                        <div style="font-size: 12px; color: #999;">
+                            Click ✓ for present, ✗ for absent
+                        </div>
+                    </div>
+                    <div class="calendar-wrapper" id="attendanceCalendar"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+const databaseURL = "https://python-725d7-default-rtdb.firebaseio.com/";
+let allStudents = [];
+let currentWeekOffset = 0;
+let attendanceData = {};
+
+// Days of the week
+const weekDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+
+// Load students from Firebase
+function loadStudents() {
+    fetch(`${databaseURL}/students.json`)
+        .then(res => res.json())
+        .then(data => {
+            if (data) {
+                allStudents = Object.values(data);
+                displayStudents(allStudents);
+                loadAttendanceData();
+            } else {
+                allStudents = [];
+                displayEmptyState();
+            }
+            updateStudentCount();
+        })
+        .catch(err => {
+            console.error("Error loading students:", err);
+            displayEmptyState();
+        });
+}
+
+// Display students in the list
+function displayStudents(students) {
+    const studentList = document.getElementById('studentList');
+    
+    if (students.length === 0) {
+        displayEmptyState();
+        return;
+    }
+
+    studentList.innerHTML = students.map(student => {
+        const initials = (student.name.charAt(0) + student.lastname.charAt(0)).toUpperCase();
+        const attendanceRate = calculateAttendanceRate(student.id_student);
+        
+        let badgeClass = 'student-badge';
+        if (attendanceRate < 50) badgeClass += ' low';
+        else if (attendanceRate < 80) badgeClass += ' medium';
+        
+        return `
+            <div class="student-item" onclick="selectStudent('${student.id_student}')">
+                <div class="student-info">
+                    <div class="student-avatar">${initials}</div>
+                    <div class="student-details">
+                        <h3>${student.name} ${student.lastname}</h3>
+                        <p>Level ${student.level}</p>
+                    </div>
+                </div>
+                <div class="${badgeClass}">${attendanceRate}%</div>
+            </div>
+        `;
+    }).join('');
+}
+
+// Display empty state
+function displayEmptyState() {
+    const studentList = document.getElementById('studentList');
+    studentList.innerHTML = `
+        <div class="empty-state">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+            <h3>No Students Found</h3>
+            <p>Add your first student to get started</p>
+        </div>
+    `;
+}
+
+// Filter students based on search
+function filterStudents() {
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+    const filtered = allStudents.filter(student => 
+        student.name.toLowerCase().includes(searchTerm) ||
+        student.lastname.toLowerCase().includes(searchTerm) ||
+        student.id_student.toLowerCase().includes(searchTerm)
+    );
+    displayStudents(filtered);
+}
+
+// Update student count
+function updateStudentCount() {
+    document.getElementById('studentCount').innerText = allStudents.length;
+}
+
+// Calculate attendance rate for a student
+function calculateAttendanceRate(studentId) {
+    const weekKey = getWeekKey();
+    if (!attendanceData[weekKey] || !attendanceData[weekKey][studentId]) {
+        return 0;
+    }
+    
+    const attendance = attendanceData[weekKey][studentId];
+    const total = weekDays.length;
+    const present = weekDays.filter(day => attendance[day] === 'present').length;
+    
+    return Math.round((present / total) * 100);
+}
+
+// Get current week key
+function getWeekKey() {
+    const now = new Date();
+    now.setDate(now.getDate() + (currentWeekOffset * 7));
+    const year = now.getFullYear();
+    const weekNum = getWeekNumber(now);
+    return `${year}-W${weekNum}`;
+}
+
+// Get week number
+function getWeekNumber(date) {
+    const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+    const dayNum = d.getUTCDay() || 7;
+    d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+    const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+    return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+}
+
+// Get date range for current week
+function getWeekDateRange() {
+    const now = new Date();
+    now.setDate(now.getDate() + (currentWeekOffset * 7));
+    
+    const first = now.getDate() - now.getDay() + 1;
+    const last = first + 4;
+    
+    const monday = new Date(now.setDate(first));
+    const friday = new Date(now.setDate(last));
+    
+    const options = { month: 'short', day: 'numeric' };
+    return `${monday.toLocaleDateString('en-US', options)} - ${friday.toLocaleDateString('en-US', options)}`;
+}
+
+// Change week
+function changeWeek(offset) {
+    currentWeekOffset += offset;
+    updateWeekDisplay();
+    loadAttendanceData(); // This will reload data for the new week
+}
+
+// Update week display
+function updateWeekDisplay() {
+    const weekKey = getWeekKey();
+    document.getElementById('currentWeek').innerText = weekKey;
+    document.getElementById('dateRange').innerText = getWeekDateRange();
+}
+
+// Load attendance data
+function loadAttendanceData() {
+    const weekKey = getWeekKey();
+    
+    // Initialize if doesn't exist
+    if (!attendanceData[weekKey]) {
+        attendanceData[weekKey] = {};
+    }
+    
+    fetch(`${databaseURL}/attendance/${weekKey}.json`)
+        .then(res => res.json())
+        .then(data => {
+            if (data) {
+                attendanceData[weekKey] = data;
+            } else {
+                attendanceData[weekKey] = {};
+            }
+            renderAttendanceCalendar();
+            updateStats();
+            // Refresh student list to update attendance badges
+            const searchValue = document.getElementById('searchInput').value;
+            if (searchValue) {
+                filterStudents();
+            } else {
+                displayStudents(allStudents);
+            }
+        })
+        .catch(err => {
+            console.error("Error loading attendance:", err);
+            attendanceData[weekKey] = {};
+            renderAttendanceCalendar();
+            updateStats();
+        });
+}
+
+// Render attendance calendar
+function renderAttendanceCalendar() {
+    const calendar = document.getElementById('attendanceCalendar');
+    const weekKey = getWeekKey();
+    
+    if (allStudents.length === 0) {
+        calendar.innerHTML = `
+            <div class="empty-state">
+                <p>No students registered yet</p>
+            </div>
+        `;
+        return;
+    }
+
+    let tableHTML = `
+        <table class="calendar-table">
+            <thead>
+                <tr>
+                    <th>Student</th>
+                    ${weekDays.map(day => `<th>${day.substring(0, 3)}</th>`).join('')}
+                </tr>
+            </thead>
+            <tbody>
+    `;
+
+    allStudents.forEach(student => {
+        const displayName = student.name.length > 8 
+            ? student.name.substring(0, 8) + '.' 
+            : student.name;
+            
+        tableHTML += `<tr>
+            <td>${displayName} ${student.lastname.charAt(0)}.</td>
+        `;
+
+        weekDays.forEach(day => {
+            const status = attendanceData[weekKey]?.[student.id_student]?.[day] || '';
+            tableHTML += `
+                <td>
+                    <div class="day-cell">
+                        <button class="attendance-btn ${status === 'present' ? 'present' : ''}" 
+                                onclick="markAttendance('${student.id_student}', '${day}', 'present')"
+                                title="Mark as present">
+                            ✓
+                        </button>
+                        <button class="attendance-btn ${status === 'absent' ? 'absent' : ''}" 
+                                onclick="markAttendance('${student.id_student}', '${day}', 'absent')"
+                                title="Mark as absent">
+                            ✗
+                        </button>
+                    </div>
+                </td>
+            `;
+        });
+
+        tableHTML += `</tr>`;
+    });
+
+    tableHTML += `</tbody></table>`;
+    calendar.innerHTML = tableHTML;
+}
+
+// Mark attendance
+function markAttendance(studentId, day, status) {
+    const weekKey = getWeekKey();
+    
+    if (!attendanceData[weekKey]) {
+        attendanceData[weekKey] = {};
+    }
+    if (!attendanceData[weekKey][studentId]) {
+        attendanceData[weekKey][studentId] = {};
+    }
+    
+    // Toggle off if clicking the same status
+    if (attendanceData[weekKey][studentId][day] === status) {
+        delete attendanceData[weekKey][studentId][day];
+    } else {
+        attendanceData[weekKey][studentId][day] = status;
+    }
+    
+    // Update everything
+    renderAttendanceCalendar();
+    updateStats();
+    displayStudents(document.getElementById('searchInput').value ? 
+        allStudents.filter(s => 
+            s.name.toLowerCase().includes(document.getElementById('searchInput').value.toLowerCase()) ||
+            s.lastname.toLowerCase().includes(document.getElementById('searchInput').value.toLowerCase()) ||
+            s.id_student.toLowerCase().includes(document.getElementById('searchInput').value.toLowerCase())
+        ) : allStudents);
+}
+
+// Save attendance to Firebase
+function saveAttendance() {
+    const weekKey = getWeekKey();
+    
+    fetch(`${databaseURL}/attendance/${weekKey}.json`, {
+        method: 'PUT',
+        body: JSON.stringify(attendanceData[weekKey] || {})
+    })
+    .then(res => res.json())
+    .then(() => {
+        alert('✅ Attendance saved successfully!');
+    })
+    .catch(err => {
+        console.error("Error saving attendance:", err);
+        alert('❌ Error saving attendance. Please try again.');
+    });
+}
+
+// Update statistics
+function updateStats() {
+    const weekKey = getWeekKey();
+    let totalPresent = 0;
+    let totalAbsent = 0;
+    let totalRecords = 0;
+    
+    // Daily stats
+    const dailyStats = {
+        Monday: {present: 0, total: 0},
+        Tuesday: {present: 0, total: 0},
+        Wednesday: {present: 0, total: 0},
+        Thursday: {present: 0, total: 0},
+        Friday: {present: 0, total: 0}
+    };
+    
+    // Student performance
+    let perfectAttendance = 0;
+    let atRisk = 0;
+    let studentRates = [];
+
+    if (attendanceData[weekKey]) {
+        Object.entries(attendanceData[weekKey]).forEach(([studentId, studentData]) => {
+            let studentPresent = 0;
+            let studentTotal = 0;
+            
+            Object.entries(studentData).forEach(([day, status]) => {
+                if (dailyStats[day]) {
+                    dailyStats[day].total++;
+                    if (status === 'present') {
+                        dailyStats[day].present++;
+                        studentPresent++;
+                    }
+                }
+                
+                if (status === 'present') totalPresent++;
+                if (status === 'absent') totalAbsent++;
+                totalRecords++;
+                studentTotal++;
+            });
+            
+            // Calculate student rate
+            if (studentTotal > 0) {
+                const rate = (studentPresent / studentTotal) * 100;
+                const student = allStudents.find(s => s.id_student === studentId);
+                if (student) {
+                    studentRates.push({
+                        name: `${student.name} ${student.lastname}`,
+                        rate: rate
+                    });
+                }
+                
+                if (rate === 100) perfectAttendance++;
+                if (rate < 50) atRisk++;
+            }
+        });
+    }
+
+    // Update main stats
+    document.getElementById('totalPresent').innerText = totalPresent;
+    document.getElementById('totalAbsent').innerText = totalAbsent;
+    document.getElementById('totalSessions').innerText = totalRecords;
+    
+    const avgAttendance = totalRecords > 0 
+        ? Math.round((totalPresent / totalRecords) * 100) 
+        : 0;
+    document.getElementById('avgAttendance').innerText = avgAttendance + '%';
+    
+    // Update daily breakdown
+    weekDays.forEach(day => {
+        const rate = dailyStats[day].total > 0 
+            ? Math.round((dailyStats[day].present / dailyStats[day].total) * 100)
+            : 0;
+        const elementId = day.toLowerCase() + 'Rate';
+        const element = document.getElementById(elementId);
+        if (element) {
+            element.innerText = rate + '%';
+            element.style.color = rate >= 80 ? '#10b981' : rate >= 50 ? '#f59e0b' : '#ef4444';
+        }
+    });
+    
+    // Find best day
+    let bestDay = '-';
+    let bestRate = -1;
+    weekDays.forEach(day => {
+        if (dailyStats[day].total > 0) {
+            const rate = (dailyStats[day].present / dailyStats[day].total) * 100;
+            if (rate > bestRate) {
+                bestRate = rate;
+                bestDay = day;
+            }
+        }
+    });
+    document.getElementById('bestDay').innerText = bestDay;
+    
+    // Update student performance stats
+    document.getElementById('perfectCount').innerText = perfectAttendance;
+    document.getElementById('atRiskCount').innerText = atRisk;
+    
+    // Sort students by rate
+    studentRates.sort((a, b) => b.rate - a.rate);
+    
+    if (studentRates.length > 0) {
+        document.getElementById('highestStudent').innerText = studentRates[0].name.split(' ')[0];
+        document.getElementById('lowestStudent').innerText = studentRates[studentRates.length - 1].name.split(' ')[0];
+    } else {
+        document.getElementById('highestStudent').innerText = '-';
+        document.getElementById('lowestStudent').innerText = '-';
+    }
+}
+
+// Select student (for future features)
+function selectStudent(studentId) {
+    console.log('Selected student:', studentId);
+    // You can add more functionality here
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+    updateWeekDisplay();
+    loadStudents();
+});
+</script>
+
+</body>
+</html>
